@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Build the public repo tree in <dest> from this research dir, then scan it. Never copies secrets/state/build/.profile,
 # VM disks or keys. Redacts WireGuard public keys and lab-run image digests are kept (they are content hashes).
-#   lab/stage-public-repo.sh <dest>
+#   lab/stage-public-repo.sh <dest> [extras-dir with README.md LICENSE .gitignore]
 set -euo pipefail
 SRC="$(cd "$(dirname "$0")/.." && pwd)"; D="$1"
 rm -rf "$D"; mkdir -p "$D"
@@ -14,9 +14,12 @@ mkdir -p "$D/verification"
 [ -f "$SRC/phase-3/clean-room/log.md" ] && cp "$SRC/phase-3/clean-room/log.md" "$D/verification/clean-room-log.md"
 cp "$SRC/STATUS.md" "$SRC/backlog.md" "$D/" 2>/dev/null || true
 # redact WireGuard public keys (44-char base64 ending in '=') in evidence/logs
-grep -rlE '[A-Za-z0-9+/]{43}=' "$D/proof-linux" "$D/verification" 2>/dev/null | while read -r f; do
+{ grep -rlE '[A-Za-z0-9+/]{43}=' "$D/proof-linux" "$D/verification" 2>/dev/null || true; } | while read -r f; do
   sed -i -E 's#[A-Za-z0-9+/]{42}[AEIMQUYcgkosw048]=#<wg-public-key-redacted>#g' "$f"; done
 # local absolute paths in evidence -> repo-relative
-grep -rlF "$SRC" "$D" 2>/dev/null | while read -r f; do sed -i "s#$SRC/#./#g; s#$SRC#.#g" "$f"; done
-grep -rlF "$HOME" "$D" 2>/dev/null | while read -r f; do sed -i "s#$HOME#~#g" "$f"; done
+{ grep -rlF "$SRC" "$D" 2>/dev/null || true; } | while read -r f; do sed -i "s#$SRC/#./#g; s#$SRC#.#g" "$f"; done
+{ grep -rlF "$HOME" "$D" 2>/dev/null || true; } | while read -r f; do sed -i "s#$HOME#~#g" "$f"; done
+# top-level repo files (README.md, LICENSE, .gitignore) from an optional extras dir: lab/stage-public-repo.sh <dest> [extras-dir]
+if [ -n "${2:-}" ]; then cp "$2/README.md" "$2/LICENSE" "$2/.gitignore" "$D/"; fi
+for f in README.md LICENSE; do [ -f "$D/$f" ] || echo "WARNING: $f missing in $D" >&2; done
 echo "staged: $(find "$D" -type f | wc -l) files"

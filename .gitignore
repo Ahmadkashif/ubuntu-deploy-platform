@@ -1,0 +1,10 @@
+platform/build/
+platform/state/
+platform/secrets/
+platform/.profile
+lab/vmlab/state/
+node_modules/
+dist/
+*.key
+*.pem
+.env

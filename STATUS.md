@@ -4,13 +4,13 @@
 
 | Area | Status |
 |---|---|
-| `platform/` updated (same layout) | done. 10 Linux-found bugs fixed in templates/scripts/tests (see `phase-3/deep-dive.md` §3.2) |
+| `platform/` updated (same layout) | done. 12 Linux-found bugs fixed in templates/scripts/tests (see `phase-3/deep-dive.md` §3.2) |
 | New profiles | `ubuntu-lan-verify` (LAN, local CA, min 2 cores / 3.5 GB / 25 GB), `ubuntu-nat-verify` (relay path, local CA), `linux-docker-verify` (shared-host try-out, loopback only) |
 | `proof-linux/` | fresh evidence per test for 3 environments (live Linux Docker, 26.04 VM LAN profile, 26.04 VM NAT profile + relay) |
 | Brand-new frontend through the full edge | VERIFIED: Vue 3 app built by a clean-room agent from the README only, served over LAN and the relay, IPv4 + IPv6 |
 | VERIFIED / NOT VERIFIED table | `phase-4/synthesis.md` (+ findings) |
 | Live-host changes | **none** (no sudo or host config; only new Docker objects under `shipverify` / `udp-vmlab`) |
-| Public repo | see findings (URL + commit) |
+| Public repo | https://github.com/Ahmadkashif/ubuntu-deploy-platform (public, MIT) at commit `9315c04b2ee3d1789d197d835cd3341a15cc7271` |
 | Stack | stopped, volumes kept (live host: `./down.sh`; VMs powered off, disks kept) |
 
 ## Where things are
