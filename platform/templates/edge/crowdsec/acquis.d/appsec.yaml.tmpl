@@ -1,0 +1,14 @@
+# {{derived.generated}}
+{{#if crowdsec.appsec}}
+# CrowdSec AppSec (WAF component): virtual patches + generic rules, queried in-band by the Caddy appsec handler.
+# Listens on the internal edge network only — never published ("Do not expose the AppSec Component to the internet").
+listen_addr: 0.0.0.0:7422
+appsec_configs:
+  - crowdsecurity/appsec-default
+name: shipedge-appsec
+source: appsec
+labels:
+  type: appsec
+{{#else}}
+# AppSec disabled in this profile (crowdsec.appsec: false).
+{{/if}}

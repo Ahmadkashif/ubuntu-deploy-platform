@@ -1,0 +1,37 @@
+=== idle RAM, edge VM (Ubuntu 26.04.1, 4 GB, ubuntu-lan-verify, 3 example apps deployed) 2026-10-14T12:04:47Z
+               total        used        free      shared  buff/cache   available
+Mem:            3910         850         570           9        2788        3059
+Swap:              0           0           0
+
+--- per container (docker stats, idle)
+NAME                   MEM USAGE / LIMIT
+shipedge-caddy         49.62MiB / 384MiB
+next-20261014114948    38.37MiB / 256MiB
+vite-20261014114928    10.86MiB / 64MiB
+astro-20261014114451   12.27MiB / 64MiB
+shipedge-crowdsec      117.9MiB / 256MiB
+shipedge-kamal-proxy   10.88MiB / 64MiB
+shipedge-registry      36.4MiB / 128MiB
+
+--- host daemons (RSS MiB)
+dockerd               113.7
+containerd-shim        80.5
+containerd             63.9
+unattended-upgr        31.5
+networkd-dispat        29.2
+sshd-session           19.4
+systemd-journal        16.1
+multipathd              9.4
+sshd                    7.5
+
+--- cgroup totals (MiB): system.slice / docker containers
+system.slice                         2883
+system.slice/docker.service          56
+system.slice/containerd.service      651
+all docker containers (scopes)       337
+/dev/vda1        38G   13G   26G  33% /
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          18        8         2.91GB    1.606GB (55%)
+Containers      8         7         200.7kB   20.48kB (10%)
+Local Volumes   7         6         3.341GB   3.244GB (97%)
+Build Cache     87        0         4.528GB   2.644GB

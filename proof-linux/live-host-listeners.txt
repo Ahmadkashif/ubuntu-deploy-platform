@@ -1,0 +1,6 @@
+# live host listeners added by the linux-docker-verify stack (2026-10-14T11:44:29Z)
+127.0.0.1:15055
+127.0.0.1:19080
+127.0.0.1:19443
+# any other new listeners on 80/443/5000/9080/9443?
+none

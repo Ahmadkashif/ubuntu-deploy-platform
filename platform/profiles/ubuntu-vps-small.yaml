@@ -1,0 +1,83 @@
+# Small VPS with a public IPv4 (and ideally IPv6). The edge listens on 80/443 of the public interface;
+# everything else is loopback / internal Docker networks / WireGuard. Status: rendered + validated; the same host kit and
+# edge were RUN on Ubuntu 26.04/24.04 VMs via ubuntu-lan-verify (2 GB measurements below). Public exposure/ACME NOT RUN.
+name: ubuntu-vps-small
+description: Ubuntu 24.04/26.04 VPS with a public IP — direct exposure, ACME certificates, admin over WireGuard.
+status: rendered-only
+platform: linux
+
+minimum:
+  os: [linux]
+  arch: [amd64, arm64]
+  ram_gb: 1.8               # "2 GB" plans report ~1.9 GiB usable
+  cpu_cores: 1
+  disk_free_gb: 25          # measured: ~13 GB after ~10 deploys (images 2.9 + build cache 4.5 + volumes 3.3 incl. grype DB)
+  docker_major: 29
+  notes: Measured on a 2 GB/2 vCPU Ubuntu 26.04 VM, no swap - idle 643 MiB used (edge + 4 apps); cold Next.js build peaked at 1614 MiB, cold edge-image build at 1285 MiB (17.5 min). Fits, with thin headroom - add 2 GB swap or build in CI for bigger apps; prune build cache.
+
+render:
+  host: true                # nftables, daemon.json, sshd, sysctl, wg0
+  relay: false
+
+exposure:
+  mode: direct
+  bind_ip: 0.0.0.0          # the host firewall decides who reaches 80/443
+  http_port: 80
+  https_port: 443
+  domain: example.invalid   # apps become <app>.<domain>; set your real domain before going public
+  tls: acme
+  acme_email: ops@example.invalid
+  acme_staging: true        # flip to false once DNS points here and a staging cert worked
+  proxy_protocol: false
+  relay_wg_ip: ""
+  hsts: max-age=31536000; includeSubDomains
+
+edge:
+  project: shipedge
+  public_subnet: ""         # empty = let Docker choose
+  public_gateway: ""
+  public_ipv6: true             # IPv6 on the published edge network keeps v6 client IPs (else docker-proxy rewrites them)
+  caddy_mem: 384m
+  crowdsec_mem: 256m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300          # requests per IP per window (pages pull many assets)
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 256m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false         # true = share signals + receive community blocklist (sends attacker IPs to CrowdSec)
+  appsec: true
+  ticker: 15s
+  whitelist: []             # operator IPs that must never be banned (e.g. your WireGuard peers)
+
+registry:
+  bind: 127.0.0.1:5000
+  push: localhost:5000
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: eth0
+  public_sources: any       # who may reach 80/443
+  ssh_iface: wg0            # SSH only over WireGuard
+  lan_subnet: ""
+  wg_port: 51820
+  wg_subnet: 10.66.0.0/24
+  host_wg_ip: 10.66.0.1
+
+relay:
+  public_iface: ""
+  wg_ip: ""
+  home_wg_ip: ""
+  wg_port: 51820
+
+ci:
+  runner_label: deploy

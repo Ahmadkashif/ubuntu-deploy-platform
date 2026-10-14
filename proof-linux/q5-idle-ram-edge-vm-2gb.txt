@@ -1,0 +1,28 @@
+=== edge VM rebooted with 2 GB RAM / 2 vCPU, no swap (vps-small class), stack auto-restarted (restart: unless-stopped) 2026-10-14T12:51:30Z
+2
+               total        used        free      shared  buff/cache   available
+Mem:            1962         643         554           5         920        1319
+Swap:              0           0           0
+vuefresh-20261014123648 Up 48 seconds
+next-20261014123618 Up 48 seconds
+vite-20261014123603 Up 48 seconds
+astro-20261014123310 Up 48 seconds
+shipedge-caddy Up 48 seconds (healthy)
+shipedge-crowdsec Up 48 seconds (healthy)
+shipedge-kamal-proxy Up 48 seconds
+shipedge-registry Up 48 seconds
+NAME                      MEM USAGE / LIMIT
+vuefresh-20261014123648   14.72MiB / 256MiB
+next-20261014123618       136.4MiB / 256MiB
+vite-20261014123603       6.836MiB / 64MiB
+astro-20261014123310      14.82MiB / 64MiB
+shipedge-caddy            113.5MiB / 384MiB
+shipedge-crowdsec         158MiB / 256MiB
+shipedge-kamal-proxy      22.43MiB / 64MiB
+shipedge-registry         60.96MiB / 128MiB
+after reboot: vuefresh via relay -> 200
+=== cold Next.js build on 2 GB / no swap: docker builder prune -af, then bin/ship deploy examples/nextjs-ssr (peak sampled every 2s)
+deploy exit=0
+[ship   66s] DONE next 20261014125149 -> https://next.ship.test:443 
+peak used MiB during deploy: 1614 (total 1962)
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 1:06.35

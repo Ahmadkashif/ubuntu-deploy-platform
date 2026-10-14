@@ -1,0 +1,16 @@
+# zero-downtime-rollback — profile ubuntu-nat-verify — 2026-10-14T12:44:27Z
+# $ tests/zero-downtime.sh next.ship.test /api/health -- bin/ship rollback next
+== running: bin/ship rollback next
+[ship    0s] rollback next -> 20261014123618 (next-20261014123618)
+[ship    3s] routes unchanged
+[ship    3s] smoke https://next.ship.test:443/ -> 200
+[ship    4s] DONE rollback next -> 20261014123618 (previous is now 20261014124349; run 'ship rollback next' again to undo)
+== command exit code: 0
+== requests during the run: 56
+== status codes:
+     56 200
+== versions served (in order of first appearance):
+20261014124349
+20261014123618
+== non-2xx: 0
+# exit=0

@@ -1,0 +1,8 @@
+=== unattended-upgrades on the 26.04 edge VM (kit config) 2026-10-14T13:10:56Z
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:30";
+Unattended-Upgrade::Origins-Pattern "";
+Unattended-Upgrade::Origins-Pattern:: "origin=Ubuntu,archive=${distro_codename}-security";
+Unattended-Upgrade::Origins-Pattern:: "origin=Docker,label=Docker CE";
+Allowed origins are: o=Ubuntu,a=resolute, o=Ubuntu,a=resolute-security, o=UbuntuESMApps,a=resolute-apps-security, o=UbuntuESM,a=resolute-infra-security, origin=Ubuntu,archive=resolute-security, origin=Docker,label=Docker CE
+active

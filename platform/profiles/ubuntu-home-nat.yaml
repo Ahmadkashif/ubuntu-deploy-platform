@@ -1,0 +1,83 @@
+# Home server behind NAT / CGNAT (no inbound possible). A small relay VPS with a public IP runs WireGuard + HAProxy in
+# TCP mode and forwards 80/443 with PROXY protocol v2. TLS terminates at home (the relay never holds keys).
+# The home firewall accepts 80/443 ONLY from the relay's WireGuard IP. Status: rendered + validated; host kit/edge/relay RUN in Ubuntu 26.04 VMs via the *-verify twins; going public NOT RUN.
+name: ubuntu-home-nat
+description: Ubuntu home server behind NAT/CGNAT, exposed via an OSS relay VPS (WireGuard + HAProxy PROXY-v2).
+status: rendered-only
+platform: linux
+
+minimum:
+  os: [linux]
+  arch: [amd64, arm64]
+  ram_gb: 3.5
+  cpu_cores: 2
+  disk_free_gb: 40
+  docker_major: 29
+  notes: Relay VPS minimum 1 vCPU / 512 MB / public IPv4, any distro with WireGuard + HAProxy 3.x.
+
+render:
+  host: true
+  relay: true
+
+exposure:
+  mode: relay
+  bind_ip: 0.0.0.0              # nftables only admits the relay's wg IP on 80/443
+  http_port: 80
+  https_port: 443
+  domain: example.invalid
+  tls: acme                     # HTTP-01 / TLS-ALPN-01 pass straight through the TCP relay
+  acme_email: ops@example.invalid
+  acme_staging: true
+  proxy_protocol: true
+  relay_wg_ip: 10.77.0.1        # the ONLY source allowed to send PROXY headers
+  hsts: max-age=31536000; includeSubDomains
+
+edge:
+  project: shipedge
+  public_subnet: ""
+  public_gateway: ""
+  public_ipv6: true             # IPv6 on the published edge network keeps v6 client IPs (else docker-proxy rewrites them)
+  caddy_mem: 512m
+  crowdsec_mem: 384m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 512m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false
+  appsec: true
+  ticker: 15s
+  whitelist: [192.168.1.0/24]
+
+registry:
+  bind: 127.0.0.1:5000
+  push: localhost:5000
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: eth0
+  public_sources: [10.77.0.1]   # relay only
+  ssh_iface: wg0
+  lan_subnet: 192.168.1.0/24
+  wg_port: 51820
+  wg_subnet: 10.66.0.0/24       # admin tunnel (laptop/phone peers)
+  host_wg_ip: 10.66.0.1
+
+relay:
+  public_iface: eth0            # on the relay VPS
+  wg_ip: 10.77.0.1              # relay end of the data tunnel (wgrelay)
+  home_wg_ip: 10.77.0.2         # home end of the data tunnel
+  wg_port: 51821
+
+ci:
+  runner_label: deploy

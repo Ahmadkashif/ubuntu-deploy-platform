@@ -1,0 +1,18 @@
+# {{derived.generated}}
+# /etc/ssh/sshd_config.d/10-ship-hardening.conf — keys only, no root, short grace. Reachability is enforced by
+# nftables (SSH only on {{firewall.ssh_iface}}, plus the LAN subnet if the profile sets one) — keep a provider/KVM console
+# as the break-glass path.
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+PermitRootLogin no
+PubkeyAuthentication yes
+AuthenticationMethods publickey
+MaxAuthTries 3
+LoginGraceTime 20
+X11Forwarding no
+AllowAgentForwarding no
+ClientAliveInterval 300
+ClientAliveCountMax 2
+# PerSourcePenalties: OpenSSH >= 9.8 enables it BY DEFAULT — verified on Ubuntu 26.04 (OpenSSH 10.2p1) with `sshd -T`
+# ("persourcepenalties crash:90 authfail:5 noauth:1 ..."), so nothing is set here. Ubuntu 24.04's OpenSSH 9.6 does not
+# know the option (setting it there makes sshd -t fail), which is why it stays out of this shared template.

@@ -1,0 +1,14 @@
+# csp-browser-vite — profile ubuntu-nat-verify — 2026-10-14T12:43:21Z
+# $ tests/csp-check.sh vite.ship.test /
+{
+ "url": "https://vite.ship.test:443/",
+ "jsStatus": "React rendered under the strict CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

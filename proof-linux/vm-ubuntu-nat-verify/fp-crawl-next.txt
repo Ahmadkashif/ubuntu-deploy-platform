@@ -1,0 +1,33 @@
+# fp-crawl-next — profile ubuntu-nat-verify — 2026-10-14T12:43:39Z
+# $ tests/fp-crawl.sh next.ship.test / /about
+200 GET /
+200 GET / (asset of /)
+200 GET /_next/static/chunks/0bma92pht_c97.js (asset of /)
+200 GET /_next/static/chunks/0cegfsgm6lvdz.js (asset of /)
+200 GET /_next/static/chunks/0climn1nw5h9v.js (asset of /)
+200 GET /_next/static/chunks/0cz1d0mv5g_q7.js (asset of /)
+200 GET /_next/static/chunks/3fntmmi971322.js (asset of /)
+200 GET /_next/static/chunks/3l04zcqx63h3y.js (asset of /)
+200 GET /_next/static/chunks/turbopack-0v-kycb5ehozt.js (asset of /)
+200 GET /about (asset of /)
+200 GET /about
+200 GET / (asset of /about)
+200 GET /_next/static/chunks/0bma92pht_c97.js (asset of /about)
+200 GET /_next/static/chunks/0cegfsgm6lvdz.js (asset of /about)
+200 GET /_next/static/chunks/0cz1d0mv5g_q7.js (asset of /about)
+200 GET /_next/static/chunks/3fntmmi971322.js (asset of /about)
+200 GET /_next/static/chunks/3l04zcqx63h3y.js (asset of /about)
+200 GET /_next/static/chunks/turbopack-0v-kycb5ehozt.js (asset of /about)
+200 GET /about (asset of /about)
+307 RSC nav /
+307 RSC prefetch /
+307 RSC nav /about
+307 RSC prefetch /about
+200 server action (no-JS form post, multipart)
+500 server action (JS fetch, Next-Action header)
+--- summary for next.ship.test
+     20 200
+      4 307
+      1 500
+PASS: 0 blocked (no WAF false positives)
+# exit=0

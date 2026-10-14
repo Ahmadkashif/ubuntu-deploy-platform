@@ -1,0 +1,14 @@
+# csp-browser-astro — profile ubuntu-nat-verify — 2026-10-14T12:43:13Z
+# $ tests/csp-check.sh astro.ship.test /
+{
+ "url": "https://astro.ship.test:443/",
+ "jsStatus": "JavaScript ran under the strict CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

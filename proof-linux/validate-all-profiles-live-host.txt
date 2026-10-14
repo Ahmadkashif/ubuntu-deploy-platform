@@ -1,0 +1,68 @@
+PROFILE              CHECK                              RESULT
+all                  templates host-agnostic            PASS
+linux-docker-verify  compose config                     PASS
+linux-docker-verify  caddy validate (edge image + CRS)  PASS
+linux-docker-verify  crowdsec acquis/whitelist YAML     PASS
+linux-docker-verify  actionlint forgejo-deploy.yml      PASS
+mac-docker-verify    compose config                     PASS
+mac-docker-verify    caddy validate (edge image + CRS)  PASS
+mac-docker-verify    crowdsec acquis/whitelist YAML     PASS
+mac-docker-verify    actionlint forgejo-deploy.yml      PASS
+ubuntu-home-nat      compose config                     PASS
+ubuntu-home-nat      caddy validate (edge image + CRS)  PASS
+ubuntu-home-nat      crowdsec acquis/whitelist YAML     PASS
+ubuntu-home-nat      nft -c host firewall               PASS
+ubuntu-home-nat      dockerd --validate daemon.json     PASS
+ubuntu-home-nat      sshd -t with drop-in               PASS
+ubuntu-home-nat      sysctl keys exist                  PASS
+ubuntu-home-nat      wg-quick strip wg0.conf            PASS
+ubuntu-home-nat      bash -n install-host.sh            PASS
+ubuntu-home-nat      haproxy -c relay config            PASS
+ubuntu-home-nat      nft -c relay firewall              PASS
+ubuntu-home-nat      wg-quick strip relay tunnels       PASS
+ubuntu-home-nat      actionlint forgejo-deploy.yml      PASS
+ubuntu-home-public   compose config                     PASS
+ubuntu-home-public   caddy validate (edge image + CRS)  PASS
+ubuntu-home-public   crowdsec acquis/whitelist YAML     PASS
+ubuntu-home-public   nft -c host firewall               PASS
+ubuntu-home-public   dockerd --validate daemon.json     PASS
+ubuntu-home-public   sshd -t with drop-in               PASS
+ubuntu-home-public   sysctl keys exist                  PASS
+ubuntu-home-public   wg-quick strip wg0.conf            PASS
+ubuntu-home-public   bash -n install-host.sh            PASS
+ubuntu-home-public   actionlint forgejo-deploy.yml      PASS
+ubuntu-lan-verify    compose config                     PASS
+ubuntu-lan-verify    caddy validate (edge image + CRS)  PASS
+ubuntu-lan-verify    crowdsec acquis/whitelist YAML     PASS
+ubuntu-lan-verify    nft -c host firewall               PASS
+ubuntu-lan-verify    dockerd --validate daemon.json     PASS
+ubuntu-lan-verify    sshd -t with drop-in               PASS
+ubuntu-lan-verify    sysctl keys exist                  PASS
+ubuntu-lan-verify    wg-quick strip wg0.conf            PASS
+ubuntu-lan-verify    bash -n install-host.sh            PASS
+ubuntu-lan-verify    actionlint forgejo-deploy.yml      PASS
+ubuntu-nat-verify    compose config                     PASS
+ubuntu-nat-verify    caddy validate (edge image + CRS)  PASS
+ubuntu-nat-verify    crowdsec acquis/whitelist YAML     PASS
+ubuntu-nat-verify    nft -c host firewall               PASS
+ubuntu-nat-verify    dockerd --validate daemon.json     PASS
+ubuntu-nat-verify    sshd -t with drop-in               PASS
+ubuntu-nat-verify    sysctl keys exist                  PASS
+ubuntu-nat-verify    wg-quick strip wg0.conf            PASS
+ubuntu-nat-verify    bash -n install-host.sh            PASS
+ubuntu-nat-verify    haproxy -c relay config            PASS
+ubuntu-nat-verify    nft -c relay firewall              PASS
+ubuntu-nat-verify    wg-quick strip relay tunnels       PASS
+ubuntu-nat-verify    actionlint forgejo-deploy.yml      PASS
+ubuntu-vps-small     compose config                     PASS
+ubuntu-vps-small     caddy validate (edge image + CRS)  PASS
+ubuntu-vps-small     crowdsec acquis/whitelist YAML     PASS
+ubuntu-vps-small     nft -c host firewall               PASS
+ubuntu-vps-small     dockerd --validate daemon.json     PASS
+ubuntu-vps-small     sshd -t with drop-in               PASS
+ubuntu-vps-small     sysctl keys exist                  PASS
+ubuntu-vps-small     wg-quick strip wg0.conf            PASS
+ubuntu-vps-small     bash -n install-host.sh            PASS
+ubuntu-vps-small     actionlint forgejo-deploy.yml      PASS
+all                  shellcheck bin/ship up/down/detect PASS
+failures: 0

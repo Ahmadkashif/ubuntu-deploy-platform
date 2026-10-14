@@ -1,0 +1,19 @@
+vite 200
+astro 200
+next 200
+[ship    0s] deploy vuefresh version=20261014121809 profile=ubuntu-lan-verify hosts=[vuefresh.ship.test]
+[ship    0s] [1/9] build
+[ship    8s] [2/9] scan (grype, fail on >= critical)
+[ship   11s]       findings: 0 (none >= critical)
+[ship   11s] [3/9] SBOM (syft, SPDX JSON)
+[ship   14s]       packages: 0
+[ship   14s] [4/9] push
+[ship   14s]       localhost:5000/vuefresh@sha256:2858bad95182d2aab61b15db62bded87e8c417dd77d10d0cca8fb73dfc1842ec
+[ship   14s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   15s] [6/9] verify signature before running
+[ship   15s] [7/9] run hardened container vuefresh-20261014121809
+[ship   15s] [8/9] health-gated switch (kamal-proxy: /health must return 200)
+[ship   16s] edge routes reloaded (graceful): astro.ship.test next.ship.test vite.ship.test vuefresh.ship.test
+[ship   16s] [9/9] smoke test through the edge
+[ship   17s] smoke https://vuefresh.ship.test:443/ -> 200
+[ship   17s] DONE vuefresh 20261014121809 -> https://vuefresh.ship.test:443 

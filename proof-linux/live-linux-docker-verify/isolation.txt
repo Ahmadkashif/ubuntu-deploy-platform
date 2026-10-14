@@ -1,0 +1,43 @@
+# isolation — profile linux-docker-verify — 2026-10-14T13:15:54Z
+# $ tests/isolation.sh
+== from a client on shipverify_public (the simulated internet)
+  edge-public 203.0.113.2:22 closed
+  edge-public 203.0.113.2:2019 closed
+  edge-public 203.0.113.2:2080 closed
+  edge-public 203.0.113.2:5000 closed
+  edge-public 203.0.113.2:8080 closed
+  edge-public 203.0.113.2:19080 OPEN
+  edge-public 203.0.113.2:19443 OPEN
+  shipverify-caddy@shipverify_edge_internal 172.23.0.4:2019 closed
+  shipverify-caddy@shipverify_edge_internal 172.23.0.4:2080 closed
+  shipverify-caddy@shipverify_edge_internal 172.23.0.4:19443 closed
+  shipverify-caddy@shipverify_egress 172.22.0.3:2019 closed
+  shipverify-caddy@shipverify_egress 172.22.0.3:2080 closed
+  shipverify-caddy@shipverify_egress 172.22.0.3:19443 closed
+  shipverify-crowdsec@shipverify_edge_internal 172.23.0.2:8080 closed
+  shipverify-crowdsec@shipverify_edge_internal 172.23.0.2:7422 closed
+  shipverify-crowdsec@shipverify_edge_internal 172.23.0.2:6060 closed
+  shipverify-crowdsec@shipverify_egress 172.22.0.2:8080 closed
+  shipverify-crowdsec@shipverify_egress 172.22.0.2:7422 closed
+  shipverify-crowdsec@shipverify_egress 172.22.0.2:6060 closed
+  shipverify-kamal-proxy@shipverify_apps 172.24.0.2:80 closed
+  shipverify-kamal-proxy@shipverify_edge_internal 172.23.0.3:80 closed
+  shipverify-registry@shipverify_admin 172.21.0.2:5000 closed
+  next-08d3d13361-20261014113639@shipverify_apps 172.24.0.5:80 closed
+  next-08d3d13361-20261014113639@shipverify_apps 172.24.0.5:3000 closed
+  next-08d3d13361-20261014113639@shipverify_apps 172.24.0.5:8080 closed
+  vite-08d3d13361-20261014113633@shipverify_apps 172.24.0.4:80 closed
+  vite-08d3d13361-20261014113633@shipverify_apps 172.24.0.4:3000 closed
+  vite-08d3d13361-20261014113633@shipverify_apps 172.24.0.4:8080 closed
+  astro-08d3d13361-20261014113621@shipverify_apps 172.24.0.3:80 closed
+  astro-08d3d13361-20261014113621@shipverify_apps 172.24.0.3:3000 closed
+  astro-08d3d13361-20261014113621@shipverify_apps 172.24.0.3:8080 closed
+  DNS registry: not resolvable
+  DNS crowdsec: not resolvable
+  DNS kamal-proxy: not resolvable
+  DNS shipverify-registry: not resolvable
+  DNS shipverify-crowdsec: not resolvable
+  DNS shipverify-kamal-proxy: not resolvable
+== listeners on this machine belonging to Docker (host side)
+PASS: only the edge web ports are reachable from the public network
+# exit=0

@@ -1,0 +1,14 @@
+# proxy-protocol — profile linux-docker-verify — 2026-10-14T13:18:27Z
+# $ tests/proxy-protocol.sh
+== start Caddy (edge image) with the home-nat proxy_protocol listener; relay allowed = 192.0.2.10
+== start HAProxy relay (send-proxy-v2) at 192.0.2.10
+   edge=true relay=true
+== (1) client 192.0.2.123 --> relay --> Caddy : Caddy must report client=192.0.2.123 (not the relay 192.0.2.10)
+   Caddy returned: client=192.0.2.123
+   Caddy access log (client_ip field):
+== (2) spoofing: client 192.0.2.123 (NOT the relay) forges a PROXY header claiming 1.2.3.4 -> must be rejected
+   forged-header response: <connection closed / no response = rejected>
+== control: the SAME forged header VIA the relay resolves to the real client, not 1.2.3.4
+
+PASS: real client IP preserved through the relay; a forged PROXY header from a non-relay peer is not honoured
+# exit=0

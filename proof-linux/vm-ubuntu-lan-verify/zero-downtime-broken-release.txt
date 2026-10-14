@@ -1,0 +1,46 @@
+# zero-downtime-broken-release — profile ubuntu-lan-verify — 2026-10-14T11:56:26Z
+# $ tests/broken-release.sh examples/astro-static astro.ship.test /
+=== broken release of astro: HEALTH_PATH -> 404 (2026-10-14T11:56:26Z)
+== running: /home/ubuntu/platform/bin/ship deploy /tmp/tmp.Hyaa6MA5oz --version broken-115626
+[ship    0s] deploy astro version=broken-115626 profile=ubuntu-lan-verify hosts=[astro.ship.test]
+[ship    0s] [1/9] build
+[ship    8s] [2/9] scan (grype, fail on >= critical)
+[ship   10s]       findings: 0 (none >= critical)
+[ship   10s] [3/9] SBOM (syft, SPDX JSON)
+[ship   14s]       packages: 0
+[ship   14s] [4/9] push
+[ship   14s]       localhost:5000/astro@sha256:84640694192489cb544cdee857caa865488c70b2db739a1954e3591fb7137bc1
+[ship   14s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   14s] [6/9] verify signature before running
+[ship   15s] [7/9] run hardened container astro-broken-115626
+[ship   15s] [8/9] health-gated switch (kamal-proxy: /this-health-path-does-not-exist must return 200)
+Error: target failed to become healthy within configured timeout (1m0s)
+2026-10-14T11:57:25.768589759Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:26.768124508Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:27.767947491Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:28.768559647Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:29.768581367Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:30.769015419Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:31.768546337Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:32.767902456Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:33.768604937Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:34.768679328Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:35.769122628Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:36.767876117Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:37.768743255Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:38.769165075Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:39.76909984Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:40.769249935Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:41.768025061Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:42.768876058Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:43.769229466Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T11:57:44.7685077Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+[ship] ERROR: new release never became healthy — traffic stays on the previous release
+== command exit code: 1
+== requests during the run: 503
+== status codes:
+    503 200
+== versions served (in order of first appearance):
+20261014114451
+== non-2xx: 0
+# exit=0

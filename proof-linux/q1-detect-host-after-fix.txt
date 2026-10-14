@@ -1,0 +1,18 @@
+Host: os=linux arch=amd64 distro=ubuntu-24.04 ram=31.1GB cores=16 disk_free=830GB docker=29.8.1
+Linux: uplink=eno1 cgroup=v2 docker-firewall=iptables openssh=OpenSSH_9.6p1 ssh.socket=no
+Shared-host signals:  other-containers=1
+
+PROFILE              STATUS           VERDICT
+linux-docker-verify  in-verification  OK
+mac-docker-verify    verified         OK
+ubuntu-home-nat      rendered-only    OK
+ubuntu-home-public   rendered-only    OK
+ubuntu-lan-verify    in-verification  OK
+ubuntu-nat-verify    in-verification  OK
+ubuntu-vps-small     rendered-only    OK
+
+NOTE: host-kit profiles (firewall, daemon.json, sshd, sysctl) are never auto-recommended — pick one explicitly:
+      public IP -> ubuntu-vps-small / ubuntu-home-public; behind NAT/CGNAT -> ubuntu-home-nat; LAN only -> ubuntu-lan-verify.
+      This host shows shared-host signals (other-containers=1): do NOT run install-host.sh here; use a dedicated host or VM.
+
+RECOMMENDED=linux-docker-verify

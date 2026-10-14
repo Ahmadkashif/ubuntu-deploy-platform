@@ -1,0 +1,7 @@
+=== AI-crawler UA block (edge/bots.caddy) — live host, linux-docker-verify 2026-10-14T13:04:00Z
+GPTBot/1.2                                         / -> 403   /robots.txt -> 200
+ClaudeBot/1.0                                      / -> 403   /robots.txt -> 200
+Mozilla/5.0 (compatible; PerplexityBot/1.0)        / -> 403   /robots.txt -> 200
+CCBot/2.0                                          / -> 403   /robots.txt -> 200
+Bytespider                                         / -> 403   /robots.txt -> 200
+Mozilla/5.0 (X11; Linux x86_64) Firefox/140.0      / -> 200   /robots.txt -> 200

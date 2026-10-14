@@ -1,0 +1,7 @@
+# signature-gate — profile linux-docker-verify — 2026-10-14T13:16:21Z
+# $ tests/signature-gate.sh next
+=== signature gate (linux-docker-verify) 2026-10-14T13:16:23Z
+next@sha256:505a083755e99f88a98ab2b3d6eb66b9a70478077f55b72c75620cb3f425ea16 -> VERIFIED
+unsigned-test@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e -> REFUSED: error during command execution: no signatures found
+PASS: signed digest verifies, unsigned digest refused
+# exit=0

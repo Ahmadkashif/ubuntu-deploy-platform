@@ -1,0 +1,61 @@
++ docker version --format '{{.Server.Version}}'
+permission denied while trying to connect to the docker API at unix:///var/run/docker.sock
+
++ sudo docker info --format 'fw={{.FirewallBackend.Driver}} cgroup={{.CgroupVersion}} live-restore={{.LiveRestoreEnabled}}'
+fw=iptables cgroup=2 live-restore=true
++ cat /etc/docker/daemon.json
++ tr -d '\n '
+{"ip":"127.0.0.1","userland-proxy":false,"live-restore":true,"no-new-privileges":true,"ip6tables":true,"log-driver":"json-file","log-opts":{"max-size":"10m","max-file":"3"}}
++ echo
++ sudo nft list tables
+table ip nat
+table ip filter
+table ip6 nat
+table ip6 filter
+table inet host_fw
++ sudo nft list chain inet host_fw input
++ head -30
+table inet host_fw {
+	chain input {
+		type filter hook input priority filter; policy drop;
+		iif "lo" accept
+		ct state established,related accept
+		ct state invalid drop
+		ip protocol icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+		ip protocol icmp icmp type echo-request limit rate 5/second burst 5 packets accept
+		ip6 nexthdr ipv6-icmp icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+		ip6 nexthdr ipv6-icmp icmpv6 type echo-request limit rate 5/second burst 5 packets accept
+		udp dport 51820 accept
+		iifname "wg0" tcp dport 22 accept
+		ip saddr 198.51.100.0/28 tcp dport 22 accept
+		tcp dport { 80, 443 } accept
+		limit rate 10/minute burst 20 packets log prefix "host_fw in drop: " level info
+		counter packets 0 bytes 0 drop
+	}
+}
++ sysctl net.ipv4.ip_forward net.netfilter.nf_conntrack_max kernel.unprivileged_bpf_disabled net.ipv6.conf.eth0.accept_ra net.ipv6.conf.all.forwarding
+net.ipv4.ip_forward = 1
+net.netfilter.nf_conntrack_max = 262144
+kernel.unprivileged_bpf_disabled = 1
+net.ipv6.conf.eth0.accept_ra = 2
+net.ipv6.conf.all.forwarding = 1
++ sudo sshd -T
++ grep -E '^(passwordauthentication|permitrootlogin|maxauthtries|authenticationmethods|persourcepenalties) '
+maxauthtries 3
+permitrootlogin no
+passwordauthentication no
+authenticationmethods publickey
+persourcepenalties crash:90 authfail:5 noauth:1 grace-exceeded:10 refuseconnection:10 max:600 min:15 max-sources4:65536 max-sources6:65536 overflow:permissive overflow6:permissive
++ systemctl is-active ssh nftables docker unattended-upgrades
+active
+active
+active
+active
++ systemctl is-enabled nftables
+enabled
++ sudo ufw status
+Status: inactive
++ ls -l /etc/wireguard
+ls: cannot open directory '/etc/wireguard': Permission denied
++ systemctl is-active wg-quick@wg0
+inactive

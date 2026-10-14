@@ -1,0 +1,11 @@
+=== scan gate on Linux (live host, linux-docker-verify): bin/ship deploy examples/nextjs-ssr with next 16.3.5
+[ship    0s] deploy next version=08d3d13361-20261014113514 profile=linux-docker-verify hosts=[next.localhost]
+[ship    0s] [1/9] build
+[ship   33s] [2/9] scan (grype, fail on >= critical)
+[0007] ERROR discovered vulnerabilities at or above the severity threshold
+--- grype report (state/.../scans):
+NAME           INSTALLED   FIXED IN  TYPE  VULNERABILITY        SEVERITY  EPSS         RISK   
+libcrypto3     3.5.8-r0              apk   CVE-2026-54873       High      0.5% (38th)  0.3    
+libssl3        3.5.8-r0              apk   CVE-2026-54873       High      0.5% (38th)  0.3    
+libcrypto3     3.5.8-r0              apk   CVE-2026-84782       High      0.4% (31st)  0.3    
+libssl3        3.5.8-r0              apk   CVE-2026-84782       High      0.4% (31st)  0.3    

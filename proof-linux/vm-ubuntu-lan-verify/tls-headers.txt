@@ -1,0 +1,46 @@
+# tls-headers — profile ubuntu-lan-verify — 2026-10-14T11:54:01Z
+# $ tests/tls-headers.sh
+### astro.ship.test
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:49:28 2026 GMT
+  cert: notAfter=Oct 14 23:49:28 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:astro.ship.test
+  http://astro.ship.test:80/ : 308 -> https://astro.ship.test/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 404 ] missing: none leaking: none
+### next.ship.test
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:50:48 2026 GMT
+  cert: notAfter=Oct 14 23:50:48 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:next.ship.test
+  http://next.ship.test:80/ : 308 -> https://next.ship.test/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 404 ] missing: none leaking: none
+### vite.ship.test
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:49:48 2026 GMT
+  cert: notAfter=Oct 14 23:49:48 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:vite.ship.test
+  http://vite.ship.test:80/ : 308 -> https://vite.ship.test/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 200 ] missing: none leaking: none
+PASS: TLS >= 1.2 only, all security headers present, no fingerprint headers
+# exit=0

@@ -1,0 +1,13 @@
+# {{derived.generated}}
+# HOME SERVER: /etc/wireguard/wgrelay.conf (chmod 600). Data-plane tunnel to the relay; replies to the relay's
+# PROXY-protocol connections route back through it automatically (AllowedIPs = the relay's /32 only — no default route).
+[Interface]
+Address = {{relay.home_wg_ip}}/32
+PostUp = wg set %i private-key /etc/wireguard/%i.key
+
+[Peer]
+# relay VPS
+PublicKey = REPLACE_WITH_RELAY_PUBLIC_KEY
+Endpoint = REPLACE_WITH_RELAY_PUBLIC_IP:{{relay.wg_port}}
+AllowedIPs = {{relay.wg_ip}}/32
+PersistentKeepalive = 25

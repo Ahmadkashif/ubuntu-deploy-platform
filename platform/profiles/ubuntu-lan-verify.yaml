@@ -1,0 +1,85 @@
+# Ubuntu 24.04/26.04 host on a LAN with NO public domain: the full host kit (nftables host_fw, daemon.json, sshd,
+# sysctl, WireGuard admin plane, unattended-upgrades) + the edge on 80/443 of the LAN interface, TLS from Caddy's local
+# CA (import secrets/edge-ca.crt on LAN clients). Never port-forward this profile from a router.
+# Verified in a disposable Ubuntu 26.04 KVM VM (research lab): uplink renamed eth0, lab LAN 198.51.100.0/24
+# (TEST-NET-2), admin LAN 198.51.100.0/28. Replace the firewall/lan values with yours.
+name: ubuntu-lan-verify
+description: Ubuntu LAN host, no public domain — local CA, 80/443 on the LAN, SSH on wg0 + admin LAN only.
+status: verified
+platform: linux
+
+minimum:
+  os: [linux]
+  arch: [amd64, arm64]
+  ram_gb: 3.5                   # "4 GB" class: measured stack + builds fit; see findings (2 GB works only with CI-built images or swap)
+  cpu_cores: 2
+  disk_free_gb: 25
+  docker_major: 29
+  notes: Ubuntu 24.04 or 26.04, systemd, a wired/static LAN address. Builds (edge image, Next.js) need ~1.5 GB headroom.
+
+render:
+  host: true
+  relay: false
+
+exposure:
+  mode: direct
+  bind_ip: 0.0.0.0              # the host firewall decides who reaches 80/443
+  http_port: 80
+  https_port: 443
+  domain: ship.test             # RFC 6761 reserved; apps become <app>.ship.test (add to LAN DNS / /etc/hosts)
+  tls: internal
+  acme_email: ""
+  acme_staging: false
+  proxy_protocol: false
+  relay_wg_ip: ""
+  hsts: max-age=300             # short while you use a local CA
+
+edge:
+  project: shipedge
+  public_subnet: 203.0.113.0/24 # fixed so the in-host tests can place simulated clients on it
+  public_gateway: 203.0.113.1
+  public_ipv6: true
+  caddy_mem: 384m
+  crowdsec_mem: 256m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 256m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false
+  appsec: true
+  ticker: 5s
+  whitelist: [198.51.100.0/28]  # admin LAN — never banned
+
+registry:
+  bind: 127.0.0.1:5000
+  push: localhost:5000
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: eth0
+  public_sources: any           # every LAN client may reach 80/443
+  ssh_iface: wg0
+  lan_subnet: 198.51.100.0/28   # admin LAN: SSH also allowed from here (replace)
+  wg_port: 51820
+  wg_subnet: 10.66.0.0/24
+  host_wg_ip: 10.66.0.1
+
+relay:
+  public_iface: ""
+  wg_ip: ""
+  home_wg_ip: ""
+  wg_port: 51820
+
+ci:
+  runner_label: deploy

@@ -1,0 +1,4 @@
+libcrypto3     3.5.7-r0    3.5.8-r0  apk   CVE-2026-63073  Critical  1.2% (66th)  1.1    
+libssl3        3.5.7-r0    3.5.8-r0  apk   CVE-2026-63073  Critical  1.2% (66th)  1.1    
+libcrypto3     3.5.7-r0    3.5.8-r0  apk   CVE-2026-75803  Critical  0.2% (12th)  0.2    
+libssl3        3.5.7-r0    3.5.8-r0  apk   CVE-2026-75803  Critical  0.2% (12th)  0.2    

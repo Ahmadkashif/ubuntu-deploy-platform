@@ -1,0 +1,35 @@
+# {{derived.generated}}
+# RELAY VPS: /etc/haproxy/haproxy.cfg (HAProxy >= 2.8; tested syntax with 3.2). Pure TCP pass-through: TLS terminates
+# at home, the relay never holds certificates or sees plaintext. PROXY protocol v2 carries the real client address to
+# the home Caddy, which accepts PROXY headers only from {{relay.wg_ip}}.
+global
+	log stdout format raw local0
+	maxconn 20000
+
+defaults
+	mode tcp
+	log global
+	option tcplog
+	timeout connect 5s
+	timeout client 60s
+	timeout server 60s
+
+frontend web_http
+	bind :80
+	bind [::]:80 v6only
+	default_backend home_http
+
+frontend web_https
+	bind :443
+	bind [::]:443 v6only
+	# L4 flood damping per source at the relay (L7 per-IP limits happen at home, using the PROXY address)
+	stick-table type ipv6 size 200k expire 30s store conn_cur,conn_rate(10s)
+	tcp-request connection track-sc0 src
+	tcp-request connection reject if { sc0_conn_cur gt 100 } || { sc0_conn_rate gt 300 }
+	default_backend home_https
+
+backend home_http
+	server home {{relay.home_wg_ip}}:{{exposure.http_port}} send-proxy-v2 check inter 10s
+
+backend home_https
+	server home {{relay.home_wg_ip}}:{{exposure.https_port}} send-proxy-v2 check inter 10s

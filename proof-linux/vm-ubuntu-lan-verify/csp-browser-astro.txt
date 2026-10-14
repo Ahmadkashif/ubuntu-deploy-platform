@@ -1,0 +1,28 @@
+# csp-browser-astro — profile ubuntu-lan-verify — 2026-10-14T11:54:13Z
+# $ tests/csp-check.sh astro.ship.test /
+Unable to find image 'chromedp/headless-shell:latest' locally
+latest: Pulling from chromedp/headless-shell
+325b278109e6: Pulling fs layer
+ecc510c1e359: Pulling fs layer
+ecc510c1e359: Download complete
+ecc510c1e359: Pull complete
+325b278109e6: Download complete
+325b278109e6: Pull complete
+Digest: sha256:f70908c8020555a3bf89a070140913b443a03ead28c1a66563c3912a3b32b08d
+Status: Downloaded newer image for chromedp/headless-shell:latest
+Unable to find image 'node:24.21.0-alpine' locally
+24.21.0-alpine: Pulling from library/node
+Digest: sha256:ebfe2f90462722a7a4de65e91990e97fe0d401c70e0e762c5b53302f905ec1c1
+Status: Downloaded newer image for node:24.21.0-alpine
+{
+ "url": "https://astro.ship.test:443/",
+ "jsStatus": "JavaScript ran under the strict CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

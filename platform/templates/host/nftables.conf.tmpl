@@ -1,0 +1,99 @@
+#!/usr/sbin/nft -f
+# {{derived.generated}}
+# Host firewall for a Docker web host. Install: /etc/nftables.conf, `systemctl enable --now nftables`.
+# Only touches its own table (inet host_fw): Docker's tables are left alone, so reloading this file while Docker runs
+# is safe (never use `flush ruleset` on a Docker host).
+# Why a separate FORWARD chain: Docker DNATs published ports in PREROUTING, so that traffic never hits INPUT (this is
+# how `docker run -p` bypasses UFW). Base chains of every table all see the packet and a drop is final, so this
+# table's forward policy drop wins over Docker's accept — with the iptables(-nft) backend and the experimental
+# nftables backend alike (no DOCKER-USER chain needed).
+
+define WEB_PORTS = { {{exposure.http_port}}, {{exposure.https_port}} }
+
+table inet host_fw
+delete table inet host_fw
+
+table inet host_fw {
+{{#unless derived.public_any}}
+	# the only sources allowed to reach the web ports (the relay's WireGuard address)
+	set web_sources4 {
+		type ipv4_addr
+		flags interval
+		elements = {{derived.public_set | nftset}}
+	}
+{{/unless}}
+{{#if derived.public_any}}
+	# per-source new-connection limiter for the web ports (L4 flood damping; L7 limits live in Caddy)
+	set web_flood4 {
+		type ipv4_addr
+		flags dynamic, timeout
+		timeout 1m
+		size 65536
+	}
+	set web_flood6 {
+		type ipv6_addr
+		flags dynamic, timeout
+		timeout 1m
+		size 65536
+	}
+{{/if}}
+
+	chain input {
+		type filter hook input priority filter; policy drop;
+		iif "lo" accept
+		ct state established,related accept
+		ct state invalid drop
+
+		# ICMP / ICMPv6 essentials (PMTU discovery and IPv6 neighbour discovery must work)
+		ip protocol icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+		ip protocol icmp icmp type echo-request limit rate 5/second accept
+		ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+		ip6 nexthdr icmpv6 icmpv6 type echo-request limit rate 5/second accept
+
+		# admin plane: WireGuard, and SSH only through it
+		udp dport {{firewall.wg_port}} accept
+		iifname "{{firewall.ssh_iface}}" tcp dport 22 accept
+{{#if derived.lan}}
+		ip saddr {{firewall.lan_subnet}} tcp dport 22 accept
+{{/if}}
+
+		# web ports on the host itself (only used if the edge runs with host networking; normally DNAT -> forward)
+{{#if derived.public_any}}
+		tcp dport $WEB_PORTS accept
+{{#else}}
+		iifname "wgrelay" ip saddr @web_sources4 tcp dport $WEB_PORTS accept
+{{/if}}
+
+		limit rate 10/minute burst 20 packets log prefix "host_fw in drop: " level info
+		counter drop
+	}
+
+	chain forward {
+		type filter hook forward priority filter - 10; policy drop;
+		ct state established,related accept
+		ct state invalid drop
+
+		# containers may talk to the internet (internal Docker networks are isolated by Docker itself)
+		iifname { "docker0", "br-*" } oifname "{{firewall.uplink}}" accept
+		# container <-> container across bridges on this host (Docker's own isolation rules still apply)
+		iifname { "docker0", "br-*" } oifname { "docker0", "br-*" } accept
+
+		# NEW inbound connections to containers: only the DNATed web ports (the edge container), from allowed sources.
+		# Anything else Docker publishes (an accidental `-p 8080:80`) is dropped here.
+{{#if derived.public_any}}
+		ct status dnat ct original proto-dst $WEB_PORTS ct state new add @web_flood4 { ip saddr limit rate over 50/second burst 100 packets } counter drop
+		ct status dnat ct original proto-dst $WEB_PORTS ct state new add @web_flood6 { ip6 saddr limit rate over 50/second burst 100 packets } counter drop
+		ct status dnat ct original proto-dst $WEB_PORTS accept
+{{#else}}
+		# (no per-source L3 limiter here: every request arrives from the relay's address — L7 limits use the PROXY IP)
+		iifname "wgrelay" ip saddr @web_sources4 ct status dnat ct original proto-dst $WEB_PORTS accept
+{{/if}}
+
+		limit rate 10/minute burst 20 packets log prefix "host_fw fwd drop: " level info
+		counter drop
+	}
+
+	chain output {
+		type filter hook output priority filter; policy accept;
+	}
+}

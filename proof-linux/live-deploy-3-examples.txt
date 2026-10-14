@@ -1,0 +1,51 @@
+[ship    0s] deploy astro version=08d3d13361-20261014113621 profile=linux-docker-verify hosts=[astro.localhost]
+[ship    0s] [1/9] build
+[ship    5s] [2/9] scan (grype, fail on >= critical)
+[ship    7s]       findings: 0 (none >= critical)
+[ship    7s] [3/9] SBOM (syft, SPDX JSON)
+[ship   11s]       packages: 0
+[ship   11s] [4/9] push
+[ship   11s]       localhost:15055/astro@sha256:f86db77442f8d028087ad081274020c9da379fa9790e99dffb349fd7e5ee4eb0
+[ship   11s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   11s] [6/9] verify signature before running
+[ship   11s] [7/9] run hardened container astro-08d3d13361-20261014113621
+[ship   11s] [8/9] health-gated switch (kamal-proxy: /health must return 200)
+[ship   12s] edge routes reloaded (graceful): astro.localhost
+[ship   12s] [9/9] smoke test through the edge
+[ship   12s] smoke https://astro.localhost:19443/ -> 200
+[ship   12s] DONE astro 08d3d13361-20261014113621 -> https://astro.localhost:19443 
+EXIT=0
+[ship    0s] deploy vite version=08d3d13361-20261014113633 profile=linux-docker-verify hosts=[vite.localhost]
+[ship    0s] [1/9] build
+[ship    1s] [2/9] scan (grype, fail on >= critical)
+[ship    3s]       findings: 0 (none >= critical)
+[ship    3s] [3/9] SBOM (syft, SPDX JSON)
+[ship    5s]       packages: 0
+[ship    5s] [4/9] push
+[ship    6s]       localhost:15055/vite@sha256:3f0d237f29737f961f50653a5ba57da215cca349f8b5343e0f2515ba073f7616
+[ship    6s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship    6s] [6/9] verify signature before running
+[ship    6s] [7/9] run hardened container vite-08d3d13361-20261014113633
+[ship    6s] [8/9] health-gated switch (kamal-proxy: /health must return 200)
+[ship    6s] edge routes reloaded (graceful): astro.localhost vite.localhost
+[ship    6s] [9/9] smoke test through the edge
+[ship    6s] smoke https://vite.localhost:19443/ -> 200
+[ship    6s] DONE vite 08d3d13361-20261014113633 -> https://vite.localhost:19443 
+EXIT=0
+[ship    0s] deploy next version=08d3d13361-20261014113639 profile=linux-docker-verify hosts=[next.localhost]
+[ship    0s] [1/9] build
+[ship   34s] [2/9] scan (grype, fail on >= critical)
+[ship   41s]       findings: 36 (none >= critical)
+[ship   41s] [3/9] SBOM (syft, SPDX JSON)
+[ship   47s]       packages: 86
+[ship   47s] [4/9] push
+[ship   47s]       localhost:15055/next@sha256:505a083755e99f88a98ab2b3d6eb66b9a70478077f55b72c75620cb3f425ea16
+[ship   47s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   47s] [6/9] verify signature before running
+[ship   48s] [7/9] run hardened container next-08d3d13361-20261014113639
+[ship   48s] [8/9] health-gated switch (kamal-proxy: /api/health must return 200)
+[ship   49s] edge routes reloaded (graceful): astro.localhost next.localhost vite.localhost
+[ship   49s] [9/9] smoke test through the edge
+[ship   49s] smoke https://next.localhost:19443/ -> 200
+[ship   49s] DONE next 08d3d13361-20261014113639 -> https://next.localhost:19443 
+EXIT=0

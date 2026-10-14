@@ -1,0 +1,37 @@
+# proxy-protocol — profile ubuntu-lan-verify — 2026-10-14T11:57:49Z
+# $ tests/proxy-protocol.sh
+== start Caddy (edge image) with the home-nat proxy_protocol listener; relay allowed = 192.0.2.10
+== start HAProxy relay (send-proxy-v2) at 192.0.2.10
+Unable to find image 'haproxy:3.2.23-alpine' locally
+3.2.23-alpine: Pulling from library/haproxy
+4f4fb700ef54: Pulling fs layer
+b9a59e4494e8: Pulling fs layer
+ad2d26d77ed3: Pulling fs layer
+b672eb6a7429: Pulling fs layer
+e2de96513ba9: Pulling fs layer
+ac626cae2610: Pulling fs layer
+e2de96513ba9: Already exists
+4f4fb700ef54: Already exists
+9bad2f0cfb59: Download complete
+76dd4698c125: Download complete
+b672eb6a7429: Download complete
+ad2d26d77ed3: Download complete
+ac626cae2610: Download complete
+b672eb6a7429: Pull complete
+ac626cae2610: Pull complete
+b9a59e4494e8: Download complete
+4f4fb700ef54: Pull complete
+ad2d26d77ed3: Pull complete
+b9a59e4494e8: Pull complete
+Digest: sha256:5961c68bc8a81c5124d0a98ab20f81b74717d6afe596e805977d9cf84c126222
+Status: Downloaded newer image for haproxy:3.2.23-alpine
+   edge=true relay=true
+== (1) client 192.0.2.123 --> relay --> Caddy : Caddy must report client=192.0.2.123 (not the relay 192.0.2.10)
+   Caddy returned: client=192.0.2.123
+   Caddy access log (client_ip field):
+== (2) spoofing: client 192.0.2.123 (NOT the relay) forges a PROXY header claiming 1.2.3.4 -> must be rejected
+   forged-header response: <connection closed / no response = rejected>
+== control: the SAME forged header VIA the relay resolves to the real client, not 1.2.3.4
+
+PASS: real client IP preserved through the relay; a forged PROXY header from a non-relay peer is not honoured
+# exit=0

@@ -1,0 +1,6 @@
+# {{derived.generated}}
+# /etc/systemd/system/nftables.service.d/10-ship-no-flush.conf — the stock unit runs `nft flush ruleset` on stop,
+# which deletes Docker's tables too. Only remove our own table instead (Docker keeps working).
+[Service]
+ExecStop=
+ExecStop=-/usr/sbin/nft delete table inet host_fw

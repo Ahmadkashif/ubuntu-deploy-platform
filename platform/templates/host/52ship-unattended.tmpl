@@ -1,0 +1,10 @@
+// {{derived.generated}}
+// /etc/apt/apt.conf.d/52ship-unattended — reboot for kernel/libc updates at a quiet hour (live-restore keeps
+// containers running across dockerd restarts; a reboot restarts them via restart policies + up.sh).
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:30";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+Unattended-Upgrade::Origins-Pattern {
+        "origin=Ubuntu,archive=${distro_codename}-security";
+        "origin=Docker,label=Docker CE";
+};

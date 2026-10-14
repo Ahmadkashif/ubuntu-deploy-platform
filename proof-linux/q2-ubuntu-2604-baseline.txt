@@ -1,0 +1,73 @@
++ cat /etc/os-release
++ head -3
+PRETTY_NAME="Ubuntu 26.04.1 LTS"
+NAME="Ubuntu"
+VERSION_ID="26.04"
++ uname -r
+7.0.0-34-generic
++ systemd-detect-virt
+kvm
++ stat -fc %T /sys/fs/cgroup
+cgroup2fs
++ ls /sys/fs/cgroup
++ head -3
+cgroup.controllers
+cgroup.max.depth
+cgroup.max.descendants
++ sudo --version
++ head -1
+sudo-rs 0.2.13-0ubuntu1.2
+++ command -v sudo
++ readlink -f /usr/bin/sudo
+/usr/lib/cargo/bin/sudo
++ ls --version
++ head -1
+ls (uutils coreutils) 0.10.0
+++ command -v ls
++ readlink -f /usr/bin/ls
+/usr/lib/cargo/bin/coreutils/ls
+++ command -v cp
++ readlink -f /usr/bin/cp
+/usr/bin/gnucp
++ ssh -V
+OpenSSH_10.2p1 Ubuntu-2ubuntu3.6, OpenSSL 3.5.5 27 Jan 2026
++ systemctl is-enabled ssh.socket ssh.service
+enabled
+disabled
++ systemctl is-active ssh.socket ssh.service
+active
+active
++ ls -d /run/sshd
+/run/sshd
++ sudo sshd -T
++ grep -i -E 'persourcepenalt|passwordauth'
+passwordauthentication no
+persourcepenaltyexemptlist none
+persourcepenalties crash:90 authfail:5 noauth:1 grace-exceeded:10 refuseconnection:10 max:600 min:15 max-sources4:65536 max-sources6:65536 overflow:permissive overflow6:permissive
++ nft --version
+nftables v1.1.6 (Commodore Bullmoose #7)
++ apt-cache policy haproxy wireguard-tools nftables unattended-upgrades docker.io
++ grep -E '^[a-z]|Candidate|Installed'
+haproxy:
+  Installed: (none)
+  Candidate: 3.2.9-1ubuntu2.2
+wireguard-tools:
+  Installed: (none)
+  Candidate: 1.0.20250521-1ubuntu1
+nftables:
+  Installed: 1.1.6-1
+  Candidate: 1.1.6-1
+unattended-upgrades:
+  Installed: 2.12ubuntu9
+  Candidate: 2.12ubuntu9
+docker.io:
+  Installed: (none)
+  Candidate: (none)
++ dpkg -l ufw
++ tail -1
+ii  ufw            0.36.2-9build1 all          program for managing a Netfilter firewall
++ systemctl is-active ufw unattended-upgrades
+active
+active
++ ip -o route show default
+default via 198.51.100.1 dev eth0 proto static 

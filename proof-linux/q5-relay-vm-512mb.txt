@@ -1,0 +1,16 @@
+=== relay VM (Ubuntu 26.04.1, 1 vCPU / 512 MB) after the relay tests, reached over wgrelay (its only SSH path) 2026-10-14T13:14:49Z
+1
+               total        used        free      shared  buff/cache   available
+Mem:             453         221          60           4         194         231
+Swap:              0           0           0
+  RSS COMMAND
+42732 fwupd
+22332 networkd-dispat
+21932 unattended-upgr
+16424 systemd
+16052 haproxy
+HAProxy version 3.2.9-1ubuntu2.2 2026/06/19 - https://haproxy.org/
+3
+active
+active
+active

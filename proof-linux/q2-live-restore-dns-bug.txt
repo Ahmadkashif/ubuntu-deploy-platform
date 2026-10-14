@@ -1,0 +1,38 @@
+=== dockerd restart vs Docker embedded DNS (live-restore: true) — Ubuntu 26.04 VM, Docker 29.9.0, iptables backend 2026-10-14T12:16:19Z
+--- state found (after the earlier backend switch + restarts):
+astro 500  next 500  
+--- heal: bin/ship edge restart (compose restart of the edge)
+astro 500  next 500  
+--- reproduce: plain sudo systemctl restart docker (no config change)
+shipedge-caddy Up 35 seconds (healthy)
+shipedge-crowdsec Up 34 seconds (healthy)
+shipedge-kamal-proxy Up 35 seconds
+shipedge-registry Up 35 seconds
+astro 200  next 200  
+lookup crowdsec on 127.0.0.11:53: read udp 127.0.0.1:37333->127.0.0.11:53: read: connection refused
+lookup crowdsec on 127.0.0.11:53: read udp 127.0.0.1:37333->127.0.0.11:53: read: connection refused
+--- controlled repeat: plain dockerd restarts x2 (iptables backend, live-restore=true)
+  before: /shipedge-caddy started=2026-10-14T12:16:22.869255544Z
+  before: /next-20261014114948 started=2026-10-14T11:56:20.44031023Z
+  after:  /shipedge-caddy started=2026-10-14T12:16:22.869255544Z
+  after:  /next-20261014114948 started=2026-10-14T11:56:20.44031023Z
+  restart 1 -> astro 200  next 200  
+  before: /shipedge-caddy started=2026-10-14T12:16:22.869255544Z
+  before: /next-20261014114948 started=2026-10-14T11:56:20.44031023Z
+  after:  /shipedge-caddy started=2026-10-14T12:16:22.869255544Z
+  after:  /next-20261014114948 started=2026-10-14T11:56:20.44031023Z
+  restart 2 -> astro 200  next 200  
+Hint: You are currently not seeing messages from other users and the system.
+      Users in groups 'adm', 'systemd-journal' can see all messages.
+      Pass -q to turn off this notice.
+
+--- interpretation
+* Timeline: 12:02 plain restart (iptables) -> 200; 12:02:35 switch to firewall-backend=nftables -> 200, isolation PASS;
+  12:03:10 switch BACK to iptables (daemon.json from the template) + restart with live-restored containers -> every app 500:
+  kamal-proxy/caddy "lookup <name> on 127.0.0.11:53: connection refused" (Docker's embedded DNS dead in running containers).
+* `compose restart` of the edge did NOT heal it (the fault is in dockerd's per-container DNS plumbing); one more plain
+  `systemctl restart docker` did. Two further controlled plain restarts: containers kept (StartedAt unchanged = live-restore
+  works) and apps stay 200.
+* Conclusion (scoped to what was observed): a plain dockerd restart is safe with live-restore; CHANGING the firewall
+  backend while containers are live-restored breaks container DNS until dockerd is restarted again. Operational rule
+  added to the README: switch firewall-backend only with the stack stopped (./down.sh), then restart docker, then ./up.sh.

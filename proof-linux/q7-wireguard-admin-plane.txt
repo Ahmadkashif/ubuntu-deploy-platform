@@ -1,0 +1,28 @@
+=== WireGuard admin plane: edge (Ubuntu 26.04 VM, ubuntu-lan-verify host kit) <- client 198.51.100.50 (outside admin LAN 198.51.100.0/28)
+Wed Oct 14 11:21:32 AM UTC 2026
++ sudo wg show wg0
++ grep -E 'peer|endpoint|handshake|transfer'
+peer: <wg-public-key-redacted>
+  endpoint: 198.51.100.20:51820
+  latest handshake: 9 seconds ago
+  transfer: 92 B received, 180 B sent
++ ping -c2 -W2 10.66.0.1
++ tail -2
+2 packets transmitted, 2 received, 0% packet loss, time 1001ms
+rtt min/avg/max/mdev = 1.719/1.777/1.835/0.058 ms
++ nc -z -w4 198.51.100.20 22
+SSH via LAN IP 198.51.100.20:22 from non-admin client: BLOCKED (expected)
++ echo 'SSH via LAN IP 198.51.100.20:22 from non-admin client: BLOCKED (expected)'
++ ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o LogLevel=ERROR -o ConnectTimeout=5 ubuntu@10.66.0.1 'echo SSH over wg0 OK: $(hostname) $(ip -br a show wg0)'
+SSH over wg0 OK: edge wg0 UNKNOWN 10.66.0.1/24
++ nc -z -w3 10.66.0.1 5000
+registry :5000 over wg0 closed (bound to 127.0.0.1 on the host)
++ echo 'registry :5000 over wg0 closed (bound to 127.0.0.1 on the host)'
+--- from the admin LAN (lab gateway 198.51.100.1, inside /28):
+SSH from admin LAN: OPEN (expected)
+--- edge: wg show + host_fw counters:
+peer: <wg-public-key-redacted>
+  allowed ips: 10.66.0.2/32
+  latest handshake: 18 seconds ago
+		iifname "wg0" tcp dport 22 accept
+		counter packets 11 bytes 660 drop

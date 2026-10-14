@@ -1,0 +1,17 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="Astro static example">
+  <h1>Astro static site behind the ship edge</h1>
+  <p id="js-status">JavaScript has not run (CSP would block inline scripts).</p>
+  <button id="btn" type="button">Clicked 0 times</button>
+</Base>
+<script>
+  // Bundled by Astro into an external module -> allowed by the strict default CSP (script-src 'self').
+  const s = document.getElementById("js-status");
+  if (s) s.textContent = "JavaScript ran under the strict CSP.";
+  let n = 0;
+  document.getElementById("btn")?.addEventListener("click", (e) => {
+    (e.currentTarget as HTMLButtonElement).textContent = `Clicked ${++n} times`;
+  });
+</script>

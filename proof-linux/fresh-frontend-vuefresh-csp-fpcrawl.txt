@@ -1,0 +1,31 @@
+== csp-check
+{
+ "url": "https://vuefresh.ship.test:443/",
+ "jsStatus": "vuefresh JS ran at 2026-10-14T12:18:42.725Z",
+ "button": {
+  "before": "count is 0",
+  "after": "count is 1"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+rc=0
+== fp-crawl
+200 GET /
+200 GET /assets/index-B5wbR1nl.js (asset of /)
+200 GET /assets/index-BxUiX_T9.css (asset of /)
+200 GET /about
+200 GET /assets/index-B5wbR1nl.js (asset of /about)
+200 GET /assets/index-BxUiX_T9.css (asset of /about)
+--- summary for vuefresh.ship.test
+      6 200
+PASS: 0 blocked (no WAF false positives)
+== status
+profile: ubuntu-lan-verify
+Service   Host                Path  Target                        State    TLS  Rollout  
+astro     astro.ship.test     /     astro-20261014114451:8080     running  no   no       
+next      next.ship.test      /     next-20261014114948:3000      running  no   no       
+vite      vite.ship.test      /     vite-20261014114928:8080      running  no   no       
+vuefresh  vuefresh.ship.test  /     vuefresh-20261014121809:8081  running  no   no       
+vuefresh       current=20261014121809               previous=-                            vuefresh.ship.test

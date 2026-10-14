@@ -1,0 +1,14 @@
+# csp-browser-astro — profile linux-docker-verify — 2026-10-14T13:15:59Z
+# $ tests/csp-check.sh astro.localhost /
+{
+ "url": "https://astro.localhost:19443/",
+ "jsStatus": "JavaScript ran under the strict CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

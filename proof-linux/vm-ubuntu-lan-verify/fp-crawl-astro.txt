@@ -1,0 +1,13 @@
+# fp-crawl-astro — profile ubuntu-lan-verify — 2026-10-14T11:55:24Z
+# $ tests/fp-crawl.sh astro.ship.test / /docs/
+200 GET /
+200 GET / (asset of /)
+200 GET /_astro/index.astro_astro_type_script_index_0_lang.DokQlXJf.js (asset of /)
+200 GET /docs/ (asset of /)
+200 GET /docs/
+200 GET / (asset of /docs/)
+200 GET /docs/ (asset of /docs/)
+--- summary for astro.ship.test
+      7 200
+PASS: 0 blocked (no WAF false positives)
+# exit=0

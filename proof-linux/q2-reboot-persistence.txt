@@ -1,0 +1,6 @@
+2026-10-14 11:19:59
+table inet host_fw table ip nat table ip filter table ip6 nat table ip6 filter 
+active
+active
+active
+1

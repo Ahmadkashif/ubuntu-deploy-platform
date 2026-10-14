@@ -1,0 +1,29 @@
+# zero-downtime-redeploy — profile ubuntu-nat-verify — 2026-10-14T12:43:46Z
+# $ tests/zero-downtime.sh next.ship.test /api/health -- bin/ship deploy examples/nextjs-ssr
+== running: bin/ship deploy examples/nextjs-ssr
+[ship    0s] deploy next version=20261014124349 profile=ubuntu-nat-verify hosts=[next.ship.test]
+[ship    0s] [1/9] build
+[ship   17s] [2/9] scan (grype, fail on >= critical)
+[ship   25s]       findings: 36 (none >= critical)
+[ship   25s] [3/9] SBOM (syft, SPDX JSON)
+[ship   31s]       packages: 86
+[ship   31s] [4/9] push
+[ship   31s]       localhost:5000/next@sha256:afeb9cfb42086a9c8f5cbe20e96351199d936ac40f3c9d0de1bae76de3e4223d
+[ship   31s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   32s] [6/9] verify signature before running
+[ship   32s]       signature VERIFIED against secrets/cosign.pub
+[ship   33s] [7/9] run hardened container next-20261014124349
+[ship   33s] [8/9] health-gated switch (kamal-proxy: /api/health must return 200)
+[ship   34s] routes unchanged
+[ship   34s] [9/9] smoke test through the edge
+[ship   35s] smoke https://next.ship.test:443/ -> 200
+[ship   35s] DONE next 20261014124349 -> https://next.ship.test:443 
+== command exit code: 0
+== requests during the run: 284
+== status codes:
+    284 200
+== versions served (in order of first appearance):
+20261014123618
+20261014124349
+== non-2xx: 0
+# exit=0

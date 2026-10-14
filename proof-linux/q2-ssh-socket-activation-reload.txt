@@ -1,0 +1,9 @@
+Stopping 'ssh.service', but its triggering units are still active:
+ssh.socket
+inactive
+active
+ssh.service is not active, cannot reload.
+old: systemctl reload ssh -> exit 1
+new: guarded reload -> exit 0
+active
+reconnect OK

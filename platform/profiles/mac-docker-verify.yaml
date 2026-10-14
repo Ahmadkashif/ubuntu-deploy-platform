@@ -1,0 +1,84 @@
+# VERIFICATION ONLY — a Mac (or any machine) with Docker Desktop. Everything binds to 127.0.0.1; the "internet" is a
+# Docker network on TEST-NET-3 (203.0.113.0/24, never routed on the real internet) so attacker containers get
+# non-private IPs that CrowdSec does not whitelist. No host firewall is rendered (Docker Desktop runs in a VM).
+# All Mac-specific values live HERE, never in templates.
+name: mac-docker-verify
+description: Verification profile — Docker Desktop, loopback-only ports, simulated public network, local CA.
+status: verified
+platform: darwin
+
+minimum:
+  os: [darwin, linux]
+  arch: [arm64, amd64]
+  ram_gb: 8
+  cpu_cores: 4
+  disk_free_gb: 15
+  docker_major: 29
+  notes: Docker Desktop VM with >= 4 CPU / 6 GB. Uses ports 9080/9443/5055 on 127.0.0.1.
+
+render:
+  host: false
+  relay: false
+
+exposure:
+  mode: loopback
+  bind_ip: 127.0.0.1
+  http_port: 9080
+  https_port: 9443
+  domain: localhost             # apps become <app>.localhost (resolves to 127.0.0.1 in browsers/curl)
+  tls: internal                 # Caddy's local CA
+  acme_email: ""
+  acme_staging: false
+  proxy_protocol: false
+  relay_wg_ip: ""
+  hsts: max-age=300             # short: localhost
+
+edge:
+  project: shipedge
+  public_subnet: 203.0.113.0/24
+  public_gateway: 203.0.113.1
+  public_ipv6: false             # IPv6 on the published edge network keeps v6 client IPs (else docker-proxy rewrites them)
+  caddy_mem: 384m
+  crowdsec_mem: 384m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 256m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false
+  appsec: true
+  ticker: 5s
+  whitelist: [203.0.113.1/32]      # the Docker Desktop port-forwarder (= you, testing from the Mac)
+
+registry:
+  bind: 127.0.0.1:5055          # 5000 is AirPlay on macOS
+  push: localhost:5055
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: ""
+  public_sources: any
+  ssh_iface: ""
+  lan_subnet: ""
+  wg_port: 51820
+  wg_subnet: ""
+  host_wg_ip: ""
+
+relay:
+  public_iface: ""
+  wg_ip: ""
+  home_wg_ip: ""
+  wg_port: 51820
+
+ci:
+  runner_label: deploy

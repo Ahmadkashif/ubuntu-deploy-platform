@@ -1,0 +1,13 @@
+=== nftables.service stop/restart vs Docker's tables (Ubuntu 26.04 VM) 2026-10-14T12:02:04Z
+--- 1) WITH the kit's drop-in (10-ship-no-flush.conf): systemctl restart nftables
+table ip nat table ip filter table ip6 nat table ip6 filter table ip raw table ip6 raw table inet host_fw 
+client -> https edge: 200
+--- 2) STOCK unit (drop-in removed): systemctl restart nftables  (ExecStop = nft flush ruleset)
+table inet host_fw 
+client -> https edge: 000
+--- recover: put the drop-in back, systemctl restart docker (live-restore keeps containers running)
+table inet host_fw table ip nat table ip filter table ip6 nat table ip6 filter table ip raw table ip6 raw 
+shipedge-caddy Up About a minute (health: starting)
+next-20261014114948 Up 5 minutes
+vite-20261014114928 Up 12 minutes
+client -> https edge: 200

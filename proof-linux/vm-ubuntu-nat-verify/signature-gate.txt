@@ -1,0 +1,7 @@
+# signature-gate — profile ubuntu-nat-verify — 2026-10-14T12:43:41Z
+# $ tests/signature-gate.sh next
+=== signature gate (ubuntu-nat-verify) 2026-10-14T12:43:44Z
+next@sha256:2ddd199ea98fea28a9f6583f500841361af000084177c10a5fdb94daed462aaf -> VERIFIED
+unsigned-test@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e -> REFUSED: error during command execution: no signatures found
+PASS: signed digest verifies, unsigned digest refused
+# exit=0

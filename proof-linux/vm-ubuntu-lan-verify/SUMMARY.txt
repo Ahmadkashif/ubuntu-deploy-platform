@@ -1,0 +1,17 @@
+waf-signatures               PASS
+rate-limit                   PASS
+tls-headers                  PASS
+isolation                    PASS
+crowdsec-ban                 PASS
+csp-browser-astro            PASS
+csp-browser-vite             PASS
+csp-browser-next             PASS
+fp-crawl-astro               PASS
+fp-crawl-vite                PASS
+fp-crawl-next                PASS
+signature-gate               PASS
+zero-downtime-redeploy       PASS
+zero-downtime-rollback       PASS
+zero-downtime-broken-release PASS
+proxy-protocol               PASS
+idle-footprint               PASS

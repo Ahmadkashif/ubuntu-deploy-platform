@@ -1,0 +1,12 @@
+Host: os=linux arch=amd64 distro=ubuntu-24.04 ram=31.1GB cores=16 disk_free=830GB docker=29.8.1
+
+PROFILE              STATUS         VERDICT
+mac-docker-verify    verified       OK
+ubuntu-home-nat      rendered-only  OK
+ubuntu-home-public   rendered-only  OK
+ubuntu-vps-small     rendered-only  OK
+
+NOTE: on Linux the three ubuntu-* profiles differ by EXPOSURE (public IP vs NAT), not only size.
+      public IP on this box -> ubuntu-vps-small/ubuntu-home-public; behind NAT/CGNAT -> ubuntu-home-nat.
+
+RECOMMENDED=ubuntu-home-nat

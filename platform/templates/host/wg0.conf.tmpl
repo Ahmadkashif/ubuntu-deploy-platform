@@ -1,0 +1,13 @@
+# {{derived.generated}}
+# /etc/wireguard/{{firewall.ssh_iface}}.conf — ADMIN plane tunnel (SSH, registry, dashboards). chmod 600.
+# Keys: `wg genkey | tee /etc/wireguard/{{firewall.ssh_iface}}.key | wg pubkey` — never commit them.
+[Interface]
+Address = {{firewall.host_wg_ip}}/{{derived.wg_prefix}}
+ListenPort = {{firewall.wg_port}}
+PostUp = wg set %i private-key /etc/wireguard/%i.key
+
+# One [Peer] per admin device (laptop, phone). Replace the placeholders.
+[Peer]
+# laptop
+PublicKey = REPLACE_WITH_LAPTOP_PUBLIC_KEY
+AllowedIPs = REPLACE_WITH_LAPTOP_WG_IP/32

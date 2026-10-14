@@ -1,0 +1,8 @@
+# fp-crawl-vite — profile linux-docker-verify — 2026-10-14T13:16:21Z
+# $ tests/fp-crawl.sh vite.localhost /
+200 GET /
+200 GET /assets/index-DRuWHO2G.js (asset of /)
+--- summary for vite.localhost
+      2 200
+PASS: 0 blocked (no WAF false positives)
+# exit=0

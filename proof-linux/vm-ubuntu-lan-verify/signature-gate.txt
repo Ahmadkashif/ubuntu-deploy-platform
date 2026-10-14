@@ -1,0 +1,7 @@
+# signature-gate — profile ubuntu-lan-verify — 2026-10-14T11:55:27Z
+# $ tests/signature-gate.sh next
+=== signature gate (ubuntu-lan-verify) 2026-10-14T11:55:30Z
+next@sha256:e04d2b4c8bef7f161b3db99891c952cdf42f9b4a862b8fcd71eeb908907d146e -> VERIFIED
+unsigned-test@sha256:bdf57e528e45e4433820e045b29b4597825a1c9e38353532d90a01445013f82e -> REFUSED: error during command execution: no signatures found
+PASS: signed digest verifies, unsigned digest refused
+# exit=0

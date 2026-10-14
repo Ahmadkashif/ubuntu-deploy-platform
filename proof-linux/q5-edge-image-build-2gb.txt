@@ -1,0 +1,12 @@
+=== cold edge-image build (xcaddy: Caddy + coraza + crowdsec + ratelimit) on 2 GB / no swap, stack running
+build exit=0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 17:34.97
+	Maximum resident set size (kbytes): 58180
+peak used MiB: 1285 (total 1962)
+shipedge-caddy Up 20 minutes (healthy)
+shipedge-crowdsec Up 20 minutes (healthy)
+shipedge-kamal-proxy Up 20 minutes
+shipedge-registry Up 20 minutes

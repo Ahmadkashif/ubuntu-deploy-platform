@@ -1,0 +1,82 @@
+# Home server with a public IP: the router port-forwards TCP 80/443 (and optionally UDP 443) to this host.
+# Admin from the LAN subnet or WireGuard. Status: rendered + validated; host kit/edge/relay RUN in Ubuntu 26.04 VMs via the *-verify twins; going public NOT RUN.
+name: ubuntu-home-public
+description: Ubuntu home server behind a router with a public IP and port-forward 80/443 — ACME, admin on LAN/WireGuard.
+status: rendered-only
+platform: linux
+
+minimum:
+  os: [linux]
+  arch: [amd64, arm64]
+  ram_gb: 3.5
+  cpu_cores: 2
+  disk_free_gb: 40
+  docker_major: 29
+  notes: Also fits a Forgejo Runner deploy lane (builds on-host); keep the box on a UPS if it serves the web.
+
+render:
+  host: true
+  relay: false
+
+exposure:
+  mode: direct
+  bind_ip: 0.0.0.0
+  http_port: 80
+  https_port: 443
+  domain: example.invalid
+  tls: acme
+  acme_email: ops@example.invalid
+  acme_staging: true
+  proxy_protocol: false
+  relay_wg_ip: ""
+  hsts: max-age=31536000; includeSubDomains
+
+edge:
+  project: shipedge
+  public_subnet: ""
+  public_gateway: ""
+  public_ipv6: true             # IPv6 on the published edge network keeps v6 client IPs (else docker-proxy rewrites them)
+  caddy_mem: 512m
+  crowdsec_mem: 384m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 512m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false
+  appsec: true
+  ticker: 15s
+  whitelist: [192.168.1.0/24]   # your LAN (replace) — LAN clients are never banned
+
+registry:
+  bind: 127.0.0.1:5000
+  push: localhost:5000
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: eth0
+  public_sources: any
+  ssh_iface: wg0
+  lan_subnet: 192.168.1.0/24    # replace with your LAN; SSH also allowed from here
+  wg_port: 51820
+  wg_subnet: 10.66.0.0/24
+  host_wg_ip: 10.66.0.1
+
+relay:
+  public_iface: ""
+  wg_ip: ""
+  home_wg_ip: ""
+  wg_port: 51820
+
+ci:
+  runner_label: deploy

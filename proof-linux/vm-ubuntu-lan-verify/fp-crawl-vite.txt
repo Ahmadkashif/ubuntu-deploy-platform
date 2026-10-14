@@ -1,0 +1,8 @@
+# fp-crawl-vite — profile ubuntu-lan-verify — 2026-10-14T11:55:24Z
+# $ tests/fp-crawl.sh vite.ship.test /
+200 GET /
+200 GET /assets/index-9OPECS67.js (asset of /)
+--- summary for vite.ship.test
+      2 200
+PASS: 0 blocked (no WAF false positives)
+# exit=0

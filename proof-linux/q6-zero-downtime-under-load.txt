@@ -1,0 +1,33 @@
+=== zero-downtime under load 2026-10-14T12:21:25Z: 10 sources x 20 req/s, new TLS connection per request, 150s
+loadgen started
+--- [t+15s] redeploy next (new version) on the edge
+[ship    0s] [1/9] build
+[ship   15s] [2/9] scan (grype, fail on >= critical)
+[ship   23s] [3/9] SBOM (syft, SPDX JSON)
+[ship   30s] [4/9] push
+[ship   30s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   30s] [6/9] verify signature before running
+[ship   31s] [7/9] run hardened container next-20261014122142
+[ship   31s] [8/9] health-gated switch (kamal-proxy: /api/health must return 200)
+[ship   32s] [9/9] smoke test through the edge
+[ship   33s] smoke https://next.ship.test:443/ -> 200
+[ship   34s] DONE next 20261014122142 -> https://next.ship.test:443 
+--- rollback next
+[ship    2s] smoke https://next.ship.test:443/ -> 200
+[ship    2s] DONE rollback next -> 20261014114948 (previous is now 20261014122142; run 'ship rollback next' again to undo)
+--- waiting for the load run to finish
+requests: 30000 over 150s = 200 req/s
+status codes: {'200': 30000}
+latency ms: p50=19 p95=91 p99=158 max=766
+versions in order of first appearance: 20261014114948 -> 20261014122142
+non-200: 0
+req per 10s window: [1998, 2002, 2000, 2000, 2000, 2000, 1986, 2014, 1996, 2004, 2000, 2000, 1967, 2028, 2005]
+requests: 30000 over 150s = 200 req/s
+status codes: {'200': 30000}
+latency ms: p50=19 p95=91 p99=158 max=766
+versions in order of first appearance: 20261014114948 -> 20261014122142
+non-200: 0
+req per 10s window: [1998, 2002, 2000, 2000, 2000, 2000, 1986, 2014, 1996, 2004, 2000, 2000, 1967, 2028, 2005]
+version transitions (time order, all 10 sources merged; brief interleaving at a cutover is expected): 6
+  first: ['t+0.0s 20261014114948', 't+48.1s 20261014122142', 't+48.1s 20261014114948']
+  last: ['t+48.1s 20261014114948', 't+48.1s 20261014122142', 't+61.4s 20261014114948']

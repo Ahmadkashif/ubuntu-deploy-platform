@@ -1,0 +1,11 @@
+# idle-footprint — profile linux-docker-verify — 2026-10-14T13:18:34Z
+# $ sh -c docker stats --no-stream --format 'table {{.Name}}\t{{.MemUsage}}\t{{.CPUPerc}}' $(docker ps --format '{{.Names}}' | grep -E '^(shipverify-|astro-|vite-|next-)')
+NAME                              MEM USAGE / LIMIT   CPU %
+next-08d3d13361-20261014113639    38.32MiB / 256MiB   0.00%
+vite-08d3d13361-20261014113633    10.88MiB / 64MiB    0.00%
+astro-08d3d13361-20261014113621   11.33MiB / 64MiB    0.00%
+shipverify-caddy                  76.7MiB / 384MiB    0.00%
+shipverify-kamal-proxy            22.68MiB / 64MiB    0.00%
+shipverify-crowdsec               93.59MiB / 384MiB   0.03%
+shipverify-registry               38.37MiB / 128MiB   0.00%
+# exit=0

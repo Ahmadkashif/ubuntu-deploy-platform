@@ -1,0 +1,30 @@
+=== independent check of the clean-room app (Vue 3 + Vite, built from README only by a fresh agent) 2026-10-14T12:20:17Z
+--- from client VM 198.51.100.50 over the LAN, full edge, CA-verified TLS (no -k)
+GET / -> 200
+GET /about -> 200
+GET /version.txt -> 200
+GET /?q=%3Cscript%3Ealert(1)%3C%2Fscript%3E -> 403
+<title>vuefresh</title>
+src="/assets/index-B5wbR1nl.js"
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+--- over IPv6:
+v6 GET / -> 200
+--- ship status + container hardening (edge VM)
+vuefresh       current=20261014121809               previous=-                            vuefresh.ship.test
+user=1000:1000 readonly=true capdrop=[ALL] secopt=[no-new-privileges] mem=268435456 pids=256 nets=shipedge_apps digest=sha256:2858bad95182d2aab61b15db62bded87e8c417dd77d10d0cca8fb73dfc1842ec
+HTTP/2 200 
+accept-ranges: bytes
+cache-control: max-age=86400
+content-security-policy: default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'
+content-type: text/html; charset=utf-8
+cross-origin-opener-policy: same-origin
+cross-origin-resource-policy: same-origin
+date: Wed, 14 Oct 2026 12:20:24 GMT
+last-modified: Wed, 14 Oct 2026 12:18:17 GMT
+permissions-policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+referrer-policy: strict-origin-when-cross-origin
+strict-transport-security: max-age=300
+vary: accept-encoding
+x-content-type-options: nosniff
+x-frame-options: DENY
+

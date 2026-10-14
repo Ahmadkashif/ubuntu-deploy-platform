@@ -1,0 +1,8 @@
+# rate-limit — profile ubuntu-lan-verify — 2026-10-14T11:53:58Z
+# $ tests/waf-verify.sh ratelimit
+== burst from 203.0.113.67: 400 requests, 25 parallel (limit per profile per window) — expect a mix of 200 and 429
+    300 200
+    100 429
+== a rate-limited response still carries security headers:
+HTTP/2 429 
+# exit=0

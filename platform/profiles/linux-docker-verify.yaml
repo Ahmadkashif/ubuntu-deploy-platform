@@ -1,0 +1,84 @@
+# VERIFICATION ONLY — any Linux machine with Docker Engine >= 29 that ALREADY RUNS OTHER THINGS (a workstation, a
+# shared box). The Linux twin of mac-docker-verify: everything binds to 127.0.0.1 on high ports, its own compose
+# project, no host kit is rendered (no firewall / daemon.json / sshd / sysctl changes), and the "internet" is a Docker
+# network on TEST-NET-3 so attacker containers get non-private IPs that CrowdSec does not whitelist.
+name: linux-docker-verify
+description: Verification profile — Linux Docker 29 on a shared host, loopback high ports, simulated public network, local CA, host untouched.
+status: verified
+platform: linux
+
+minimum:
+  os: [linux]
+  arch: [amd64, arm64]
+  ram_gb: 3.5                   # a "4 GB" machine reports ~3.8 GiB
+  cpu_cores: 2
+  disk_free_gb: 15
+  docker_major: 29
+  notes: Needs ~1.5 GB free RAM while building (edge image + apps) and ~250 MB idle. Uses 127.0.0.1:19080/19443/15055 only.
+
+render:
+  host: false
+  relay: false
+
+exposure:
+  mode: loopback
+  bind_ip: 127.0.0.1
+  http_port: 19080
+  https_port: 19443
+  domain: localhost             # apps become <app>.localhost (resolves to 127.0.0.1)
+  tls: internal                 # Caddy's local CA
+  acme_email: ""
+  acme_staging: false
+  proxy_protocol: false
+  relay_wg_ip: ""
+  hsts: max-age=300
+
+edge:
+  project: shipverify           # distinct from the production name so it never collides with a real edge
+  public_subnet: 203.0.113.0/24
+  public_gateway: 203.0.113.1
+  public_ipv6: false
+  caddy_mem: 384m
+  crowdsec_mem: 384m
+  proxy_mem: 64m
+  registry_mem: 128m
+
+limits:
+  rate_events: 300
+  rate_window: 10s
+  max_body: 10MB
+  app_mem: 256m
+  app_pids: 256
+  app_cpus: 1.0
+
+crowdsec:
+  online_api: false
+  appsec: true
+  ticker: 5s
+  whitelist: [203.0.113.1/32]   # the docker bridge gateway (= you, testing from the host's loopback)
+
+registry:
+  bind: 127.0.0.1:15055
+  push: localhost:15055
+
+security:
+  scan_fail_on: critical
+  sign: true
+
+firewall:
+  uplink: ""
+  public_sources: any
+  ssh_iface: ""
+  lan_subnet: ""
+  wg_port: 51820
+  wg_subnet: ""
+  host_wg_ip: ""
+
+relay:
+  public_iface: ""
+  wg_ip: ""
+  home_wg_ip: ""
+  wg_port: 51820
+
+ci:
+  runner_label: deploy

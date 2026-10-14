@@ -1,0 +1,15 @@
+# tests/firewall-lab.sh (nested dockerd lab, privileged container) run INSIDE the Ubuntu 26.04 edge VM 2026-10-14T13:12:25Z
+== start the 'host' (privileged, its own dockerd, uplink iface eth0)
+   nested dockerd up on host 172.22.0.2; loading a tiny web image into it
+== phase A — no host firewall (the trap)
+A :80=200 :8081=200
+== phase B — load the rendered nftables ruleset (table inet host_fw)
+   host_fw loaded
+     		type filter hook forward priority filter - 10; policy drop;
+     		ct status dnat ct original proto-dst { 80, 443 } ct state new add @web_flood4 { ip saddr limit rate over 50/second burst 100 packets } counter packets 0 bytes 0 drop
+     		ct status dnat ct original proto-dst { 80, 443 } ct state new add @web_flood6 { ip6 saddr limit rate over 50/second burst 100 packets } counter packets 0 bytes 0 drop
+     		ct status dnat ct original proto-dst { 80, 443 } accept
+B :80=200 :8081=000000
+
+
+Expected: A :80=200 :8081=200 (both open — bypass) ; B :80=200 :8081=000 (accidental port now dropped)

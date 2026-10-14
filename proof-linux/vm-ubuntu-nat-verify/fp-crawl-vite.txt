@@ -1,0 +1,8 @@
+# fp-crawl-vite — profile ubuntu-nat-verify — 2026-10-14T12:43:39Z
+# $ tests/fp-crawl.sh vite.ship.test /
+200 GET /
+200 GET /assets/index-KCnjqYA-.js (asset of /)
+--- summary for vite.ship.test
+      2 200
+PASS: 0 blocked (no WAF false positives)
+# exit=0

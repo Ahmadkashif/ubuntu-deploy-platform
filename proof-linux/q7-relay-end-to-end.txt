@@ -1,0 +1,31 @@
+=== relay end to end 2026-10-14T12:41:01Z
+  home wgrelay   endpoint: 198.51.100.30:51821
+  home wgrelay   latest handshake: 56 seconds ago
+  home wgrelay   transfer: 250.59 KiB received, 303.48 KiB sent
+--- 1) client -> relay over IPv4
+  https via relay v4 -> 200 (TLS verified against the home CA: TLS terminates at home)
+    caddy saw remote_ip=198.51.100.50 client_ip=198.51.100.50 status=200
+--- 2) client -> relay over IPv6
+  https via relay v6 -> 200
+    caddy saw remote_ip=2001:db8:5::50 client_ip=2001:db8:5::50 status=200
+--- 3) http :80 via relay (redirect)
+  http via relay -> 308 https://astro.ship.test/
+--- 4) client -> home host DIRECTLY (must be dropped by host_fw: only the relay's tunnel IP may reach 80/443)
+  direct https home v4 -> 000
+  direct https home v6 -> 000
+--- 5) forged PROXY header sent directly to the home host (blocked at L3 before Caddy even sees it)
+  (no answer = dropped)
+--- 6) relay admin surface from the internet: SSH to the relay public IP
+  relay :22 blocked (SSH only from home via wgrelay)
+--- 7) CrowdSec through the relay: a scanner at 198.51.100.81 gets banned by its REAL address; another client (.51) is unaffected
+403 403 404 404 403 404 403 403 403 403 
+  id,source,ip,reason,action,country,as,events_count,expiration,simulated,alert_id
+  14,crowdsec,Ip:198.51.100.81,crowdsecurity/http-bad-user-agent,ban,,,2,3h59m58s,false,27
+  banned 198.51.100.81 via relay -> 403
+  clean 198.51.100.51 via relay -> 200
+--- 8) Caddy proxy_protocol layer itself (inside the home host, from the simulated public Docker net 203.0.113.0/24)
+  forged PROXY header from non-relay 203.0.113.x on :80 -> <connection closed, no response = rejected>
+  no header from non-relay -> 200 (served with its own address: fallback_policy reject only refuses HEADERS from non-relay peers; host_fw keeps non-relay sources out, see 4)
+--- 9) the brand-new clean-room frontend through the relay
+  vuefresh via relay v4 (source .51) -> 200
+  vuefresh via relay v6 -> 200

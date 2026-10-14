@@ -1,0 +1,31 @@
+# crowdsec-ban — profile ubuntu-lan-verify — 2026-10-14T11:54:04Z
+# $ tests/crowdsec-ban.sh
+== baseline: attacker 203.0.113.200 can reach the site
+  before: 200
+== 203.0.113.200 probes sensitive paths + uses a scanner user-agent (generates CrowdSec signals)
+403 403 403 404 404 404 404 403 403 403 404 403 404 404 404 404 
+403 403 403 403 403 
+== wait for CrowdSec to parse the logs and decide (bouncer ticker a fews)
+-- cscli decisions list:
+   +----+----------+------------------+-----------------------------------+--------+---------+----+--------+------------+----------+
+   | ID |  Source  |    Scope:Value   |               Reason              | Action | Country | AS | Events | expiration | Alert ID |
+   +----+----------+------------------+-----------------------------------+--------+---------+----+--------+------------+----------+
+   | 8  | crowdsec | Ip:203.0.113.200 | crowdsecurity/http-bad-user-agent | ban    |         |    | 2      | 3h59m59s   | 13       |
+   | 2  | crowdsec | Ip:203.0.113.66  | crowdsecurity/http-probing        | ban    |         |    | 11     | 3h59m49s   | 2        |
+   +----+----------+------------------+-----------------------------------+--------+---------+----+--------+------------+----------+
+   6 duplicated entries skipped
+-- cscli alerts for 203.0.113.200:
+       "scenario": "crowdsecurity/http-bad-user-agent"
+       "value": "203.0.113.200"
+         "value": "203.0.113.200"
+         "value": "203.0.113.200"
+     "events_count": 2
+     "scenario": "crowdsecurity/http-bad-user-agent"
+     "scenario_hash": "7ca405d1147762b1f488bc0f13575c5af8081499c8a5c2971d706e8b03493671"
+     "scenario_version": "1.2"
+== after detection: is 203.0.113.200 now blocked by the bouncer? (expect 403)
+  after: 403
+== a DIFFERENT source (203.0.113.201) is unaffected (expect 200):
+  clean client: 200
+PASS: scanner detected, banned, and blocked by the bouncer
+# exit=0

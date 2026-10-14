@@ -1,0 +1,61 @@
+#!/usr/bin/env bash
+# {{derived.generated}}
+# Prepare an Ubuntu 24.04/26.04 host for this profile. Run as root FROM A CONSOLE SESSION the first time (it
+# enables a default-deny firewall). Idempotent (verified: run twice on Ubuntu 26.04.1 in a KVM VM). Review first.
+# Do NOT run it on a machine that already runs other services (bin/detect-host.sh prints shared-host signals).
+#   sudo build/{{derived.profile}}/host/install-host.sh
+set -euo pipefail
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+[ "$(id -u)" = 0 ] || { echo "run as root"; exit 1; }
+. /etc/os-release
+case "$VERSION_ID" in 24.04|26.04) ;; *) echo "WARN: untested Ubuntu $VERSION_ID";; esac
+
+echo "==> packages (Docker from Docker's apt repo, nftables, WireGuard, unattended-upgrades)"
+apt-get update -q
+apt-get install -y -q ca-certificates curl nftables wireguard-tools unattended-upgrades python3 openssl
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+chmod a+r /etc/apt/keyrings/docker.asc
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu ${UBUNTU_CODENAME} stable" \
+  > /etc/apt/sources.list.d/docker.list
+apt-get update -q
+apt-get install -y -q docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+# UFW would only give a false sense of control over published ports — this host uses nftables directly.
+# (`ufw status` prints "Status: inactive" when off — match the whole word, not the substring "active")
+if command -v ufw >/dev/null && ufw status | grep -q '^Status: active'; then echo "==> disabling ufw"; ufw disable; fi
+
+echo "==> kernel/sysctl, sshd, docker daemon, unattended-upgrades"
+install -m 0644 "$HERE/sysctl-hardening.conf" /etc/sysctl.d/60-ship-hardening.conf && sysctl --system >/dev/null
+install -m 0644 "$HERE/sshd-hardening.conf" /etc/ssh/sshd_config.d/10-ship-hardening.conf
+mkdir -p /run/sshd   # sshd -t needs it; absent on socket-activated hosts before the first connection
+sshd -t
+# Ubuntu >= 22.10 socket-activates sshd: ssh.service may be inactive (console-only first run) and `reload` would fail.
+# An inactive sshd reads the new drop-in when the next connection starts it.
+if systemctl is-active -q ssh; then systemctl reload ssh; fi
+install -m 0644 "$HERE/daemon.json" /etc/docker/daemon.json && systemctl restart docker
+# The operator who ran `sudo install-host.sh` runs ./up.sh and bin/ship next: they need the docker group (which is
+# root-equivalent — this host is single-purpose, admin only over WireGuard/LAN). Skip with SHIP_NO_DOCKER_GROUP=1.
+if [ -n "${SUDO_USER:-}" ] && [ "$SUDO_USER" != root ] && [ -z "${SHIP_NO_DOCKER_GROUP:-}" ]; then
+  usermod -aG docker "$SUDO_USER" && echo "    added $SUDO_USER to group docker (log in again)"
+fi
+install -m 0644 "$HERE/20auto-upgrades" /etc/apt/apt.conf.d/20auto-upgrades
+install -m 0644 "$HERE/52ship-unattended" /etc/apt/apt.conf.d/52ship-unattended
+
+echo "==> WireGuard admin tunnel ({{firewall.ssh_iface}})"
+if [ ! -f /etc/wireguard/{{firewall.ssh_iface}}.key ]; then
+  umask 077; wg genkey > /etc/wireguard/{{firewall.ssh_iface}}.key
+fi
+[ -f /etc/wireguard/{{firewall.ssh_iface}}.conf ] || install -m 0600 "$HERE/wg0.conf" /etc/wireguard/{{firewall.ssh_iface}}.conf
+echo "    host public key: $(wg pubkey < /etc/wireguard/{{firewall.ssh_iface}}.key)  (add your laptop as [Peer], then: systemctl enable --now wg-quick@{{firewall.ssh_iface}})"
+
+echo "==> firewall (nftables, table inet host_fw) — validating first"
+nft -c -f "$HERE/nftables.conf"
+install -m 0644 "$HERE/nftables.conf" /etc/nftables.conf
+# Ubuntu's nftables.service stops with `nft flush ruleset`, which would also wipe Docker's own tables (published ports
+# and container egress break until dockerd restarts). Make stop/reload touch only our table.
+install -d -m 0755 /etc/systemd/system/nftables.service.d
+install -m 0644 "$HERE/nftables-service-override.conf" /etc/systemd/system/nftables.service.d/10-ship-no-flush.conf
+systemctl daemon-reload
+systemctl enable --now nftables
+nft -f /etc/nftables.conf
+echo "==> done. Next: bring up the WireGuard tunnel, confirm SSH over it, then ./up.sh {{derived.profile}}"

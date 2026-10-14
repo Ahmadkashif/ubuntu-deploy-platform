@@ -1,0 +1,8 @@
+# {{derived.generated}}
+# Operator addresses that must never be banned (profile crowdsec.whitelist). Private ranges are already whitelisted
+# by crowdsecurity/whitelists — which is exactly why a relay without PROXY protocol would make CrowdSec useless.
+name: shipedge/operator-whitelist
+description: "Never ban the operator's own addresses"
+whitelist:
+  reason: "operator address (profile crowdsec.whitelist)"
+  cidr: {{crowdsec.whitelist | yamllist}}

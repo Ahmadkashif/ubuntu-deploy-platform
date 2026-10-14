@@ -1,0 +1,43 @@
+# isolation — profile ubuntu-lan-verify — 2026-10-14T11:54:03Z
+# $ tests/isolation.sh
+== from a client on shipedge_public (the simulated internet)
+  edge-public 203.0.113.2:22 closed
+  edge-public 203.0.113.2:2019 closed
+  edge-public 203.0.113.2:2080 closed
+  edge-public 203.0.113.2:5000 closed
+  edge-public 203.0.113.2:8080 closed
+  edge-public 203.0.113.2:80 OPEN
+  edge-public 203.0.113.2:443 OPEN
+  shipedge-caddy@shipedge_edge_internal 172.20.0.4:2019 closed
+  shipedge-caddy@shipedge_edge_internal 172.20.0.4:2080 closed
+  shipedge-caddy@shipedge_edge_internal 172.20.0.4:443 closed
+  shipedge-caddy@shipedge_egress 172.21.0.3:2019 closed
+  shipedge-caddy@shipedge_egress 172.21.0.3:2080 closed
+  shipedge-caddy@shipedge_egress 172.21.0.3:443 closed
+  shipedge-crowdsec@shipedge_edge_internal 172.20.0.2:8080 closed
+  shipedge-crowdsec@shipedge_edge_internal 172.20.0.2:7422 closed
+  shipedge-crowdsec@shipedge_edge_internal 172.20.0.2:6060 closed
+  shipedge-crowdsec@shipedge_egress 172.21.0.2:8080 closed
+  shipedge-crowdsec@shipedge_egress 172.21.0.2:7422 closed
+  shipedge-crowdsec@shipedge_egress 172.21.0.2:6060 closed
+  shipedge-kamal-proxy@shipedge_apps 172.18.0.2:80 closed
+  shipedge-kamal-proxy@shipedge_edge_internal 172.20.0.3:80 closed
+  shipedge-registry@shipedge_admin 172.19.0.2:5000 closed
+  next-20261014114948@shipedge_apps 172.18.0.5:80 closed
+  next-20261014114948@shipedge_apps 172.18.0.5:3000 closed
+  next-20261014114948@shipedge_apps 172.18.0.5:8080 closed
+  vite-20261014114928@shipedge_apps 172.18.0.4:80 closed
+  vite-20261014114928@shipedge_apps 172.18.0.4:3000 closed
+  vite-20261014114928@shipedge_apps 172.18.0.4:8080 closed
+  astro-20261014114451@shipedge_apps 172.18.0.3:80 closed
+  astro-20261014114451@shipedge_apps 172.18.0.3:3000 closed
+  astro-20261014114451@shipedge_apps 172.18.0.3:8080 closed
+  DNS registry: not resolvable
+  DNS crowdsec: not resolvable
+  DNS kamal-proxy: not resolvable
+  DNS shipedge-registry: not resolvable
+  DNS shipedge-crowdsec: not resolvable
+  DNS shipedge-kamal-proxy: not resolvable
+== listeners on this machine belonging to Docker (host side)
+PASS: only the edge web ports are reachable from the public network
+# exit=0

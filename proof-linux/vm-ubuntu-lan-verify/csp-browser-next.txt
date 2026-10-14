@@ -1,0 +1,14 @@
+# csp-browser-next — profile ubuntu-lan-verify — 2026-10-14T11:55:16Z
+# $ tests/csp-check.sh next.ship.test /
+{
+ "url": "https://next.ship.test:443/",
+ "jsStatus": "Hydrated under the edge CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

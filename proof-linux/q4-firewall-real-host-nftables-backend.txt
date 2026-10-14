@@ -1,0 +1,24 @@
+=== real-host firewall test 2026-10-14T12:02:35Z
+edge: Ubuntu 26.04.1 LTS, docker 29.9.0, firewall-backend=nftables
+fw8082 127.0.0.1:8082->80/tcp
+fw8081 0.0.0.0:8081->80/tcp
+--- (A) host_fw REMOVED (nft delete table inet host_fw) — the trap
+A :80=308 :443=200 :8081=200 :8082=000 
+--- (B) host_fw LOADED (nft -f /etc/nftables.conf)
+		type filter hook forward priority filter - 10; policy drop;
+		ct status dnat ct original proto-dst { 80, 443 } accept
+B :80=308 :443=200 :8081=000 :8082=000 
+expect: A :80=308 :443=200 :8081=200 :8082=000 | B :80=308 :443=200 :8081=000 :8082=000
+--- (C) DOCKER-ISOLATION between two ordinary (non-internal) user bridges
+isonetA -> isonetB (172.23.0.2): blocked (isolation enforced)
+same-bridge control isonetB -> isoB: reachable
+--- (D) IPv6 from the client to the edge [2001:db8:5::20]:443
+v6 ping ok
+v6 https -> 200
+--- (E) client IP as seen by Caddy (userland-proxy off => no rewrite to the bridge gateway)
+  uri=/?ipcheck=v4 remote_ip=198.51.100.50 client_ip=198.51.100.50
+  uri=/?ipcheck=v6 remote_ip=2001:db8:5::50 client_ip=2001:db8:5::50
+  edge-public 203.0.113.2:80 OPEN
+  edge-public 203.0.113.2:443 OPEN
+PASS: only the edge web ports are reachable from the public network
+backend now: iptables

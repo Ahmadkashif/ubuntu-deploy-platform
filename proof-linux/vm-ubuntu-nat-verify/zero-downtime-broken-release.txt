@@ -1,0 +1,58 @@
+# zero-downtime-broken-release — profile ubuntu-nat-verify — 2026-10-14T12:44:38Z
+# $ tests/broken-release.sh examples/astro-static astro.ship.test /
+=== broken release of astro: HEALTH_PATH -> 404 (2026-10-14T12:44:38Z)
+== running: /home/ubuntu/platform/bin/ship deploy /tmp/tmp.5zpm07lUcH --version broken-124438
+[ship    0s] deploy astro version=broken-124438 profile=ubuntu-nat-verify hosts=[astro.ship.test]
+[ship    0s] [1/9] build
+[ship    9s] [2/9] scan (grype, fail on >= critical)
+[ship   12s]       findings: 0 (none >= critical)
+[ship   12s] [3/9] SBOM (syft, SPDX JSON)
+[ship   15s]       packages: 0
+[ship   15s] [4/9] push
+[ship   15s]       localhost:5000/astro@sha256:e12969477999cd660596ded2a2bcd4c723ceeb9ac83aa3db0c7b7d21c19bd05e
+[ship   15s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   16s] [6/9] verify signature before running
+[ship   16s]       signature VERIFIED against secrets/cosign.pub
+[ship   16s] [7/9] run hardened container astro-broken-124438
+[ship   16s] [8/9] health-gated switch (kamal-proxy: /this-health-path-does-not-exist must return 200)
+Error: target failed to become healthy within configured timeout (1m0s)
+2026-10-14T12:45:40.253430657Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:41.253891909Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:42.253183479Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:43.253333775Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:44.253276495Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:45.25332963Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:46.253275456Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:47.253842498Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:48.252855194Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:49.252708876Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:50.252973713Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:51.254009516Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:52.252936673Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:53.253156768Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:54.252959156Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:55.25362784Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:56.25334208Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:57.253917277Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:58.253513956Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+2026-10-14T12:45:59.252816598Z  WARN static_web_server::error_page: method=GET uri=/this-health-path-does-not-exist status=404 error="Not Found"
+--- kamal-proxy (why the health gate failed):
+{"time":"2026-10-14T12:45:57.848502086Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"d245df66-38cc-4dc3-a685-b54c114a2f74","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1740155,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.021865631Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"54aabd22-3e0a-4f71-ba52-b392115b553f","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1871022,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.19496462Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"073b32e3-f04a-44fd-b9bd-efeaead9d654","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1803234,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.253849845Z","level":"INFO","msg":"Healthcheck failed","url":"http://astro-broken-124438:8080/this-health-path-does-not-exist","error":"unexpected status (404)"}
+{"time":"2026-10-14T12:45:58.36060076Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"4f3fb9b4-ee30-4d5b-af80-de9ae9e00835","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1879032,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.537216993Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"5e4d704c-d0b8-4990-8934-0f847879a773","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1912750,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.710909627Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"c2850e87-5e81-4ba1-b2e2-d57f9a77cf18","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1904976,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:58.887085946Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"1005c9a6-7033-4d7a-adbc-6c8a11de92b8","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1933980,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:59.0651532Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"7da43e1c-9474-44c2-9c32-0108abdac6ac","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":1911711,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+{"time":"2026-10-14T12:45:59.235519849Z","level":"INFO","msg":"Request","host":"astro.ship.test","port":80,"path":"/","request_id":"44cf3478-c97f-4c5d-9954-4fbbc86e3600","status":200,"service":"astro","target":"astro-20261014123310:8080","rollout":false,"duration":465598,"method":"GET","req_content_length":0,"req_content_type":"","resp_content_length":416,"resp_content_type":"text/html; charset=utf-8","client_addr":"172.20.0.4","client_port":"60828","remote_addr":"203.0.113.3","user_agent":"curl/8.5.0","proto":"HTTP/1.1","scheme":"http","query":""}
+[ship] ERROR: new release never became healthy — traffic stays on the previous release
+== command exit code: 1
+== requests during the run: 512
+== status codes:
+    512 200
+== versions served (in order of first appearance):
+20261014123310
+== non-2xx: 0
+# exit=0

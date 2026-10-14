@@ -1,0 +1,29 @@
+#!/usr/sbin/nft -f
+# {{derived.generated}}
+# RELAY VPS: /etc/nftables.conf — public 80/443 in, WireGuard in, SSH only through the tunnel. Nothing is forwarded:
+# HAProxy is a local process that opens new connections to the home host over wgrelay.
+flush ruleset
+
+table inet relay_fw {
+	chain input {
+		type filter hook input priority filter; policy drop;
+		iif "lo" accept
+		ct state established,related accept
+		ct state invalid drop
+		ip protocol icmp icmp type { destination-unreachable, time-exceeded, parameter-problem } accept
+		ip protocol icmp icmp type echo-request limit rate 5/second accept
+		ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+		tcp dport { 80, 443 } accept
+		udp dport {{relay.wg_port}} accept
+		# SSH to the relay only from the home host through the tunnel (use the provider console to bootstrap)
+		iifname "wgrelay" ip saddr {{relay.home_wg_ip}} tcp dport 22 accept
+		limit rate 10/minute burst 20 packets log prefix "relay_fw in drop: " level info
+		counter drop
+	}
+	chain forward {
+		type filter hook forward priority filter; policy drop;
+	}
+	chain output {
+		type filter hook output priority filter; policy accept;
+	}
+}

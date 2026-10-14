@@ -1,0 +1,34 @@
+# crowdsec-ban — profile ubuntu-nat-verify — 2026-10-14T13:19:08Z (final code)
+== baseline: attacker 203.0.113.172 can reach the site
+  before: 200
+== 203.0.113.172 probes sensitive paths + uses a scanner user-agent (generates CrowdSec signals)
+403 403 403 404 404 404 404 403 403 403 404 403 404 404 404 404 
+403 403 403 403 403 
+== wait for CrowdSec to parse the logs and decide (bouncer ticker a fews)
+-- cscli decisions list:
+   +----+----------+------------------+------------------------------------+--------+---------+----+--------+------------+----------+
+   | ID |  Source  |    Scope:Value   |               Reason               | Action | Country | AS | Events | expiration | Alert ID |
+   +----+----------+------------------+------------------------------------+--------+---------+----+--------+------------+----------+
+   | 36 | crowdsec | Ip:203.0.113.172 | crowdsecurity/http-sensitive-files | ban    |         |    | 5      | 3h59m59s   | 63       |
+   | 33 | crowdsec | Ip:203.0.113.145 | crowdsecurity/http-bad-user-agent  | ban    |         |    | 2      | 3h30m54s   | 57       |
+   | 27 | crowdsec | Ip:203.0.113.148 | crowdsecurity/http-bad-user-agent  | ban    |         |    | 2      | 3h27m26s   | 46       |
+   | 21 | crowdsec | Ip:203.0.113.200 | crowdsecurity/http-bad-user-agent  | ban    |         |    | 2      | 3h22m58s   | 35       |
+   | 16 | crowdsec | Ip:203.0.113.66  | crowdsecurity/http-probing         | ban    |         |    | 11     | 3h22m49s   | 29       |
+   | 14 | crowdsec | Ip:198.51.100.81 | crowdsecurity/http-bad-user-agent  | ban    |         |    | 2      | 3h22m28s   | 27       |
+   +----+----------+------------------+------------------------------------+--------+---------+----+--------+------------+----------+
+   26 duplicated entries skipped
+-- cscli alerts for 203.0.113.172:
+       "scenario": "crowdsecurity/http-sensitive-files"
+       "value": "203.0.113.172"
+         "value": "203.0.113.172"
+         "value": "203.0.113.172"
+         "value": "203.0.113.172"
+         "value": "203.0.113.172"
+         "value": "203.0.113.172"
+     "events_count": 5
+== after detection: is 203.0.113.172 now blocked by the bouncer? (expect 403)
+  after: 403
+== a DIFFERENT source (203.0.113.201) is unaffected (expect 200):
+  clean client: 200
+PASS: scanner detected, banned, and blocked by the bouncer
+# exit=0

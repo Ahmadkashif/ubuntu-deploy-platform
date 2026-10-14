@@ -1,0 +1,14 @@
+# csp-browser-vite — profile linux-docker-verify — 2026-10-14T13:16:06Z
+# $ tests/csp-check.sh vite.localhost /
+{
+ "url": "https://vite.localhost:19443/",
+ "jsStatus": "React rendered under the strict CSP.",
+ "button": {
+  "before": "Clicked 0 times",
+  "after": "Clicked 1 times"
+ },
+ "cspViolations": [],
+ "consoleErrors": []
+}
+PASS: 0 CSP violations
+# exit=0

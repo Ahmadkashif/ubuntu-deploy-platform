@@ -1,0 +1,26 @@
+# waf-signatures — profile linux-docker-verify — 2026-10-14T13:15:51Z
+# $ tests/waf-verify.sh signatures
+== benign requests from 203.0.113.65 (must be 2xx)
+  OK   200  home
+  OK   200  search words
+  OK   200  name with apostrophe
+  OK   200  utm params
+  OK   200  pagination
+  benign: 5 ok, 0 false-positive
+== attack signatures from 203.0.113.66 (must be 403)
+  BLOCK 403  SQLi UNION SELECT
+  BLOCK 403  SQLi boolean tautology
+  BLOCK 403  SQLi in JSON body
+  BLOCK 403  XSS script element
+  BLOCK 403  XSS onerror attribute
+  BLOCK 403  XSS in form body
+  BLOCK 403  traversal /etc/passwd
+  BLOCK 403  encoded traversal
+  BLOCK 403  OS cmd ;cat /etc/passwd
+  BLOCK 403  OS cmd cat-shadow-subshell
+  BLOCK 403  Log4Shell JNDI header
+  BLOCK 403  SSRF cloud metadata
+  BLOCK 403  XML attribute (4.25.1)
+  NOTE  403  short token ;id (CRS PL1 known gap; raise to PL2 or add a rule to catch it)
+  attacks: 13 blocked, 0 leaked
+# exit=0

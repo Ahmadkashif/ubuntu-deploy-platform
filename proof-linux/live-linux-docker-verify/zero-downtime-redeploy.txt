@@ -1,0 +1,29 @@
+# zero-downtime-redeploy — profile linux-docker-verify — 2026-10-14T13:16:24Z
+# $ tests/zero-downtime.sh next.localhost /api/health -- bin/ship deploy examples/nextjs-ssr
+== running: bin/ship deploy examples/nextjs-ssr
+[ship    0s] deploy next version=08d3d13361-20261014131627 profile=linux-docker-verify hosts=[next.localhost]
+[ship    0s] [1/9] build
+[ship   11s] [2/9] scan (grype, fail on >= critical)
+[ship   17s]       findings: 36 (none >= critical)
+[ship   17s] [3/9] SBOM (syft, SPDX JSON)
+[ship   24s]       packages: 86
+[ship   24s] [4/9] push
+[ship   24s]       localhost:15055/next@sha256:c0e43081241e150d3e3449149175940ae65ec35ef66e92c0b47316757fc77fe4
+[ship   24s] [5/9] sign (cosign, local key, no transparency-log upload)
+[ship   24s] [6/9] verify signature before running
+[ship   25s]       signature VERIFIED against secrets/cosign.pub
+[ship   25s] [7/9] run hardened container next-08d3d13361-20261014131627
+[ship   25s] [8/9] health-gated switch (kamal-proxy: /api/health must return 200)
+[ship   26s] routes unchanged
+[ship   26s] [9/9] smoke test through the edge
+[ship   26s] smoke https://next.localhost:19443/ -> 200
+[ship   26s] DONE next 08d3d13361-20261014131627 -> https://next.localhost:19443 
+== command exit code: 0
+== requests during the run: 252
+== status codes:
+    252 200
+== versions served (in order of first appearance):
+08d3d13361-20261014113639
+08d3d13361-20261014131627
+== non-2xx: 0
+# exit=0

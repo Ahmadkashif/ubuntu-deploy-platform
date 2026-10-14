@@ -1,0 +1,36 @@
+# {{derived.generated}}
+# Forgejo Actions: deploy on every push to main via bin/ship on a runner that lives ON the web host
+# (label "{{ci.runner_label}}", registered to this repo only, polling outbound — no inbound port). The runner needs:
+# docker access, a checkout of platform/ at PLATFORM_DIR, and platform/secrets (cosign key) readable by it.
+# Copy to <app-repo>/.forgejo/workflows/deploy.yml. CI checks (tests, lint) belong in the Taskfile contract from the
+# self-hosted-ci-cd research and run in the `ci` lane before this job.
+name: deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.repository }}
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: {{ci.runner_label}}
+    timeout-minutes: 20
+    env:
+      PLATFORM_DIR: /opt/ship/platform
+      SHIP_PROFILE: {{derived.profile}}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2 (same SHA on data.forgejo.org)
+        with:
+          persist-credentials: false
+      - name: build, scan, SBOM, push, sign, verify, health-gated deploy, smoke
+        run: |
+          "$PLATFORM_DIR/bin/ship" deploy . --version "${GITHUB_SHA::12}"
+      - name: keep evidence (scan report + SBOM)
+        if: always()
+        run: |
+          app="$(awk -F= '$1=="APP"{print $2}' ship.env)"
+          ls -l "$PLATFORM_DIR/state/$SHIP_PROFILE/$app/sbom" "$PLATFORM_DIR/state/$SHIP_PROFILE/$app/scans" | tail -n 4

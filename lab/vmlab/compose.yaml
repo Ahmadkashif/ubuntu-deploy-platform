@@ -1,0 +1,18 @@
+# docker compose -p udp-vmlab -f lab/vmlab/compose.yaml up -d --build
+# Holds the lab bridge (198.51.100.0/24 + 2001:db8:5::/64, TEST-NET/documentation ranges) and the QEMU VMs.
+# Publishes NO ports. State (disks, keys, serial logs) lives in LAB_DIR on the host (default: ./state).
+name: udp-vmlab
+services:
+  vmlab:
+    build: .
+    image: udp-vmlab:1
+    container_name: udp-vmlab
+    devices: ["/dev/kvm", "/dev/net/tun"]
+    cap_add: [NET_ADMIN]
+    sysctls:
+      net.ipv4.ip_forward: "1"
+      net.ipv6.conf.all.forwarding: "1"
+      net.ipv6.conf.all.disable_ipv6: "0"
+    volumes:
+      - ${LAB_DIR:-./state}:/lab
+    restart: "no"

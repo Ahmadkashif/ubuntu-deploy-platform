@@ -1,0 +1,11 @@
+# idle-footprint — profile ubuntu-nat-verify — 2026-10-14T12:46:11Z
+# $ sh -c docker stats --no-stream --format 'table {{.Name}}\t{{.MemUsage}}\t{{.CPUPerc}}' $(docker ps --format '{{.Names}}' | grep -E '^(shipedge-|astro-|vite-|next-)')
+NAME                   MEM USAGE / LIMIT   CPU %
+next-20261014123618    38.21MiB / 256MiB   0.00%
+vite-20261014123603    10.88MiB / 64MiB    0.00%
+astro-20261014123310   10.89MiB / 64MiB    0.00%
+shipedge-caddy         82.84MiB / 384MiB   0.00%
+shipedge-crowdsec      137.3MiB / 256MiB   0.04%
+shipedge-kamal-proxy   9.066MiB / 64MiB    0.00%
+shipedge-registry      43.2MiB / 128MiB    0.00%
+# exit=0

@@ -1,0 +1,11 @@
+# {{derived.generated}}
+# RELAY VPS: /etc/wireguard/wgrelay.conf (chmod 600). The home host dials out to this endpoint (works behind CGNAT).
+[Interface]
+Address = {{relay.wg_ip}}/32
+ListenPort = {{relay.wg_port}}
+PostUp = wg set %i private-key /etc/wireguard/%i.key
+
+[Peer]
+# home server
+PublicKey = REPLACE_WITH_HOME_WGRELAY_PUBLIC_KEY
+AllowedIPs = {{relay.home_wg_ip}}/32

@@ -1,0 +1,46 @@
+# tls-headers — profile linux-docker-verify — 2026-10-14T13:15:53Z
+# $ tests/tls-headers.sh
+### astro.localhost
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:36:33 2026 GMT
+  cert: notAfter=Oct 14 23:36:33 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:astro.localhost
+  http://astro.localhost:19080/ : 308 -> https://astro.localhost/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 404 ] missing: none leaking: none
+### next.localhost
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:37:28 2026 GMT
+  cert: notAfter=Oct 14 23:37:28 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:next.localhost
+  http://next.localhost:19080/ : 308 -> https://next.localhost/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 404 ] missing: none leaking: none
+### vite.localhost
+  tls1: refused
+  tls1_1: refused
+  tls1_2: accepted (Cipher is ECDHE-ECDSA-AES128-GCM-SHA256)
+  tls1_3: accepted (Cipher is TLS_AES_128_GCM_SHA256)
+  cert: issuer=CN = Caddy Local Authority - ECC Intermediate
+  cert: subject=
+  cert: notBefore=Oct 14 11:36:39 2026 GMT
+  cert: notAfter=Oct 14 23:36:39 2026 GMT
+  cert: X509v3 Subject Alternative Name: critical
+  cert:     DNS:vite.localhost
+  http://vite.localhost:19080/ : 308 -> https://vite.localhost/
+  / [HTTP/2 200 ] missing: none leaking: none
+  /definitely-not-here [HTTP/2 200 ] missing: none leaking: none
+PASS: TLS >= 1.2 only, all security headers present, no fingerprint headers
+# exit=0

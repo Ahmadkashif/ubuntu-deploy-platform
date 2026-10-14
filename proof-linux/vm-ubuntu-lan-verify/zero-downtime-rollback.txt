@@ -1,0 +1,16 @@
+# zero-downtime-rollback — profile ubuntu-lan-verify — 2026-10-14T11:56:16Z
+# $ tests/zero-downtime.sh next.ship.test /api/health -- bin/ship rollback next
+== running: bin/ship rollback next
+[ship    0s] rollback next -> 20261014114948 (next-20261014114948)
+[ship    3s] routes unchanged
+[ship    3s] smoke https://next.ship.test:443/ -> 200
+[ship    3s] DONE rollback next -> 20261014114948 (previous is now 20261014115535; run 'ship rollback next' again to undo)
+== command exit code: 0
+== requests during the run: 54
+== status codes:
+     54 200
+== versions served (in order of first appearance):
+20261014115535
+20261014114948
+== non-2xx: 0
+# exit=0
